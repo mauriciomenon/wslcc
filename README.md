@@ -5,6 +5,14 @@
   <p>基于微软官方 WSL Container API 与 wslc CLI，提供镜像、容器、Compose 编排、卷、日志的图形化管理。</p>
 </div>
 
+[简体中文](README.md) | [English](README.en.md) | [Portugues (Brasil)](README.pt-BR.md)
+
+## 界面语言
+
+在本分支中，打开 **设置 > 外观 > 语言**，可选择跟随系统、英语、巴西葡萄牙语或简体中文。完全退出 WSLCC（包括托盘图标）后重新打开即可生效。
+
+项目文档：[中文](docs) | [English](docs/en) | [Portugues (Brasil)](docs/pt-BR)。
+
 ## 特性
 
 - 仪表盘：环境状态、资源配额、活动会话（可一键打开会话终端）
