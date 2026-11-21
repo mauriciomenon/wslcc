@@ -1,8 +1,8 @@
 <div align="center">
   <img src="src/WSLCC.App/Assets/AppIcon.png" alt="WSLCC" width="120" />
-  <h1>WSLCC</h1>
-  <p>A Windows desktop manager for WSL containers (wslc)</p>
-  <p>Manage images, containers, Compose projects, volumes and logs through Microsoft's WSL Container API and the wslc CLI.</p>
+  <p><strong>WSLCC | Translation-only fork</strong></p>
+  <h1><a href="https://github.com/iwvw/wslcc">Original project: iwvw/wslcc</a></h1>
+  <p>WSLCC was developed by iwvw and the original project's contributors. This fork translates the interface and documentation into Brazilian Portuguese and English.</p>
 </div>
 
 [Portugues (Brasil)](README.md) | [English](README.en.md) | [简体中文](README.zh-CN.md)
@@ -12,6 +12,12 @@
 In this fork, open **Settings > Appearance > Language** to follow the system language or choose English, Portuguese (Brazil) or Simplified Chinese. Quit WSLCC completely, including the tray icon, then reopen it to apply the change.
 
 Project documentation is available in [Chinese](docs), [English](docs/en) and [Portuguese (Brazil)](docs/pt-BR).
+
+## Documentation from the original project
+
+The sections below are an English translation of the iwvw/wslcc README. [Read the original Chinese README](https://github.com/iwvw/wslcc#readme)
+
+WSLCC is a Windows desktop manager for WSL containers (wslc). Manage images, containers, Compose projects, volumes and logs through Microsoft's WSL Container API and the wslc CLI.
 
 ## Features
 

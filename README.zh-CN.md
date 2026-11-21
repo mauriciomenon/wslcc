@@ -1,8 +1,8 @@
 <div align="center">
   <img src="src/WSLCC.App/Assets/AppIcon.png" alt="WSLCC" width="120" />
-  <h1>WSLCC</h1>
-  <p>Windows 上的 WSL 容器（wslc）桌面管理器</p>
-  <p>基于微软官方 WSL Container API 与 wslc CLI，提供镜像、容器、Compose 编排、卷、日志的图形化管理。</p>
+  <p><strong>WSLCC | 仅用于翻译的分支</strong></p>
+  <h1><a href="https://github.com/iwvw/wslcc">原项目：iwvw/wslcc</a></h1>
+  <p>WSLCC 由 iwvw 和原项目的贡献者开发。本分支将界面和文档翻译为巴西葡萄牙语和英语。</p>
 </div>
 
 [Portugues (Brasil)](README.md) | [English](README.en.md) | [简体中文](README.zh-CN.md)
@@ -12,6 +12,12 @@
 在本分支中，打开 **设置 > 外观 > 语言**，可选择跟随系统、英语、巴西葡萄牙语或简体中文。完全退出 WSLCC（包括托盘图标）后重新打开即可生效。
 
 项目文档：[中文](docs) | [English](docs/en) | [Portugues (Brasil)](docs/pt-BR)。
+
+## 原项目文档
+
+以下各节来自 iwvw/wslcc 的中文 README。[阅读原项目 README](https://github.com/iwvw/wslcc#readme)
+
+WSLCC 是 Windows 上的 WSL 容器（wslc）桌面管理器。基于微软官方 WSL Container API 与 wslc CLI，提供镜像、容器、Compose 编排、卷、日志的图形化管理。
 
 ## 特性
 

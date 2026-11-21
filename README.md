@@ -1,8 +1,8 @@
 <div align="center">
   <img src="src/WSLCC.App/Assets/AppIcon.png" alt="WSLCC" width="120" />
-  <h1>WSLCC</h1>
-  <p>Gerenciador de containers WSL (wslc) para Windows</p>
-  <p>Gerencie imagens, containers, projetos Compose, volumes e logs pela interface grafica que usa a WSL Container API da Microsoft e a CLI wslc.</p>
+  <p><strong>WSLCC | Fork dedicado exclusivamente a traducao</strong></p>
+  <h1><a href="https://github.com/iwvw/wslcc">Projeto original: iwvw/wslcc</a></h1>
+  <p>O WSLCC foi desenvolvido por iwvw e pelos colaboradores do projeto original. Este fork traduz a interface e a documentacao para portugues do Brasil e ingles.</p>
 </div>
 
 [Portugues (Brasil)](README.md) | [English](README.en.md) | [简体中文](README.zh-CN.md)
@@ -12,6 +12,12 @@
 Neste fork, abra **Configuracoes > Aparencia > Idioma** para seguir o idioma do sistema ou escolher ingles, portugues do Brasil ou chines simplificado. Encerre o WSLCC pelo icone da bandeja e abra o aplicativo novamente para aplicar a mudanca.
 
 Consulte a documentacao do projeto em [chines](docs), [ingles](docs/en) ou [portugues do Brasil](docs/pt-BR).
+
+## Documentacao do projeto original
+
+As secoes abaixo traduzem o README de iwvw/wslcc. [Ler o README original em chines](https://github.com/iwvw/wslcc#readme)
+
+O WSLCC e um gerenciador de containers WSL (wslc) para Windows. Gerencie imagens, containers, projetos Compose, volumes e logs pela interface grafica que usa a WSL Container API da Microsoft e a CLI wslc.
 
 ## Recursos
 
