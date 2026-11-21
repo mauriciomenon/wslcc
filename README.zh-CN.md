@@ -11,7 +11,7 @@
 
 在本分支中，打开 **设置 > 外观 > 语言**，可选择跟随系统、英语、巴西葡萄牙语或简体中文。完全退出 WSLCC（包括托盘图标）后重新打开即可生效。
 
-项目文档：[中文](docs) | [English](docs/en) | [Portugues (Brasil)](docs/pt-BR)。
+参见[原项目文档](https://github.com/iwvw/wslcc/tree/main/docs)。
 
 ## 原项目文档
 

@@ -37,10 +37,6 @@ jobs:
       - name: Restore & Build
         run: dotnet build src/WSLCC.App/WSLCC.App.csproj -c Release -p:Platform=x64 -p:Version=${{ steps.version.outputs.ver }} -v:m
 
-      - name: Check translations
-        shell: powershell
-        run: ./tests/Test-Localization.ps1
-
       - name: Publish (self-contained / merged)
         run: dotnet publish src/WSLCC.App/WSLCC.App.csproj -c Release -r win-x64 --self-contained true -p:Platform=x64 -p:Version=${{ steps.version.outputs.ver }} -p:WSLCCFrameworkDependent=false -p:PublishTrimmed=false -p:PublishReadyToRun=false -o artifacts/publish -v:m
 
@@ -50,9 +46,11 @@ jobs:
       - name: Trim language resources
         shell: powershell
         run: |
-          . ./scripts/build-common.ps1
+          $keep = @("en-us", "en-US", "en-GB", "pt-BR", "zh-CN", "zh-Hans", "zh-Hant", "zh-TW")
           foreach ($publish in @("artifacts/publish", "artifacts/publish-framework")) {
-            Remove-UnusedLanguageResource -OutputDirectory $publish
+            Get-ChildItem "$publish" -Directory | Where-Object {
+                $_.Name -match "^[a-z]{2,3}(-[A-Za-z]{2,8}){0,2}$" -and $_.Name -notin $keep
+            } | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
           }
 
       - name: Package zips
@@ -62,7 +60,6 @@ jobs:
           Compress-Archive -Path "artifacts/publish-framework/*" -DestinationPath artifacts/WSLCC-win-x64-framework.zip -Force
 
       - name: Upload zips
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
           name: wslcc-zips
@@ -72,7 +69,6 @@ jobs:
           if-no-files-found: error
 
       - name: Upload publish dirs
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
           name: wslcc-publish
@@ -105,7 +101,6 @@ jobs:
           Write-Output "framework: $($framework.FullName)"
 
       - name: Upload installers
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
           name: wslcc-installers

@@ -33,7 +33,7 @@ public sealed partial class HomePage : Page
         }
         catch (Exception ex)
         {
-            global::WSLCC_App.App.WriteLog(L.GetFormat("HomePage.TerminalLaunchFailed", ex));
+            global::WSLCC_App.App.WriteLog($"会话终端启动失败：{ex}");
             try
             {
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("cmd.exe", $"/c start {command}")
@@ -43,7 +43,7 @@ public sealed partial class HomePage : Page
             }
             catch (Exception fallbackEx)
             {
-                global::WSLCC_App.App.WriteLog(L.GetFormat("HomePage.CmdTerminalLaunchFailed", fallbackEx));
+                global::WSLCC_App.App.WriteLog($"cmd 会话终端启动失败：{fallbackEx}");
             }
         }
     }

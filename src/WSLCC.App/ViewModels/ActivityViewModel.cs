@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WSLCC.Core.Services;
 using WSLCC.Data;
-using WSLCC_App;
 
 namespace WSLCC.App.ViewModels;
 
@@ -21,14 +20,7 @@ public sealed partial class AuditLogItemViewModel : ObservableObject
 
     public string Detail => Source.Detail ?? string.Empty;
 
-    public string Result => ResultLabel(Source.Result);
-
-    internal static string ResultLabel(string result) => result switch
-    {
-        "success" => L.Get("Activity.ResultSuccess"),
-        "failure" => L.Get("Activity.ResultFailure"),
-        _ => result
-    };
+    public string Result => Source.Result;
 
     public string DurationText => Source.DurationMs?.ToString() ?? string.Empty;
 }
@@ -43,7 +35,7 @@ public sealed partial class PullHistoryItemViewModel : ObservableObject
 
     public string ImageRef => Source.ImageRef;
 
-    public string Status => AuditLogItemViewModel.ResultLabel(Source.Status);
+    public string Status => Source.Status;
 
     public string Error => Source.Error ?? string.Empty;
 }

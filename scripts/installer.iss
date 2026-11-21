@@ -40,28 +40,22 @@ SetupIconFile={#SourceDir}\Assets\AppIcon.ico
 VersionInfoVersion={#AppVersion}
 
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
-Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "chinesesimplified"; MessagesFile: "languages\ChineseSimplified.isl"
-
-[CustomMessages]
-english.MissingRuntimes=This edition requires the following runtimes, which are missing:%n%n%1%nThe application cannot start without them. Open the download pages now?%nChoose No to continue installing.
-brazilianportuguese.MissingRuntimes=Esta edicao requer os seguintes componentes que ainda nao estao instalados:%n%n%1%nSem esses componentes, o aplicativo nao pode iniciar. Abrir as paginas de download agora?%nEscolha Nao para continuar a instalacao.
-chinesesimplified.MissingRuntimes=这是框架依赖（分离版），检测到以下运行时未安装：%n%n%1%n缺少运行时应用将无法启动。是否现在打开下载页面？%n选择「否」将忽略并继续安装。
+Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+Name: "desktopicon"; Description: "创建桌面快捷方式"; GroupDescription: "附加任务："
 
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
+Name: "{group}\{#MyAppName} 卸载"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "立即运行 {#MyAppName}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 #if FrameworkDependent == "true"
@@ -123,14 +117,16 @@ begin
   Result := True;
   Missing := '';
   if not IsDotNet10DesktopInstalled then
-    Missing := Missing + '  - .NET 10 Desktop Runtime' + #13#10;
+    Missing := Missing + '  - .NET 10 桌面运行时' + #13#10;
   if not IsWindowsAppRuntimeInstalled then
     Missing := Missing + '  - Windows App Runtime 2.4' + #13#10;
 
   if Missing = '' then
     Exit;
 
-  if MsgBox(FmtMessage(CustomMessage('MissingRuntimes'), [Missing]),
+  if MsgBox('这是框架依赖（分离版），检测到以下运行时未安装：' + #13#10#13#10 + Missing
+            + #13#10 + '缺少运行时应用将无法启动。是否现在打开下载页面？' + #13#10
+            + '选择「否」将忽略并继续安装。',
             mbConfirmation, MB_YESNO) = IDYES then
   begin
     if not IsDotNet10DesktopInstalled then

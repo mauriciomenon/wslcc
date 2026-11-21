@@ -11,7 +11,7 @@
 
 Neste fork, abra **Configuracoes > Aparencia > Idioma** para seguir o idioma do sistema ou escolher ingles, portugues do Brasil ou chines simplificado. Encerre o WSLCC pelo icone da bandeja e abra o aplicativo novamente para aplicar a mudanca.
 
-Consulte a documentacao do projeto em [chines](docs), [ingles](docs/en) ou [portugues do Brasil](docs/pt-BR).
+Consulte a [documentacao do projeto original](https://github.com/iwvw/wslcc/tree/main/docs).
 
 ## Documentacao do projeto original
 

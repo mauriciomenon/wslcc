@@ -302,14 +302,14 @@ public sealed partial class ContainersPage : Page
         }
         catch (Exception ex)
         {
-            global::WSLCC_App.App.WriteLog(L.GetFormat("ContainersPage.WindowsTerminalFailed", ex));
+            global::WSLCC_App.App.WriteLog($"Windows Terminal 启动失败：{ex}");
             try
             {
                 Process.Start(new ProcessStartInfo("cmd.exe", $"/c start wslc exec -it {target} /bin/sh") { UseShellExecute = false });
             }
             catch (Exception fallbackEx)
             {
-                global::WSLCC_App.App.WriteLog(L.GetFormat("ContainersPage.CmdFailed", fallbackEx));
+                global::WSLCC_App.App.WriteLog($"cmd 终端启动失败：{fallbackEx}");
             }
         }
     }

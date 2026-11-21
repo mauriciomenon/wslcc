@@ -100,7 +100,7 @@ public partial class ContainersViewModel : ObservableObject
         {
             if (ex.Message == _lastStatsError) return;
             _lastStatsError = ex.Message;
-            global::WSLCC_App.App.WriteLog(L.GetFormat("ContainersPage.RefreshStatsFailed", ex));
+            global::WSLCC_App.App.WriteLog($"容器统计刷新失败：{ex}");
             CheckReparseWarning(ex.Message);
         }
     }
@@ -309,7 +309,6 @@ public partial class ContainersViewModel : ObservableObject
         var text = message ?? "";
         var reparse = text.Contains("800701c0", StringComparison.OrdinalIgnoreCase)
             || text.Contains("不受信任的装入点", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("ponto de montagem n\u00e3o confi\u00e1vel", StringComparison.OrdinalIgnoreCase)
             || text.Contains("untrusted mount point", StringComparison.OrdinalIgnoreCase);
         var paths = reparse
             ? WslcPathDiagnostics.DetectUntrustedReparsePoints(
@@ -349,7 +348,7 @@ public partial class ContainersViewModel : ObservableObject
             }
             catch (Exception ex)
             {
-                global::WSLCC_App.App.WriteLog(L.GetFormat("ContainersPage.LoadIconFailed", item.Name, ex));
+                global::WSLCC_App.App.WriteLog($"容器图标解析失败（{item.Name}）：{ex}");
                 item.ApplyIcon(null);
             }
         }
@@ -363,11 +362,6 @@ public partial class ContainersViewModel : ObservableObject
         var networkIssue = text.Contains("E_UNEXPECTED", StringComparison.OrdinalIgnoreCase)
             || text.Contains("灾难性故障", StringComparison.OrdinalIgnoreCase)
             || text.Contains("catastrophic", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("falha catastr\u00f3fica", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("de rede", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("tempo limite", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("conectado n\u00e3o respondeu", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("recusou", StringComparison.OrdinalIgnoreCase)
             || text.Contains("网络", StringComparison.OrdinalIgnoreCase)
             || text.Contains("超时", StringComparison.OrdinalIgnoreCase)
             || text.Contains("timeout", StringComparison.OrdinalIgnoreCase)

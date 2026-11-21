@@ -34,15 +34,15 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     public partial string Language { get; set; }
 
-    public IReadOnlyList<TextOption> LanguageOptions { get; } =
+    public IReadOnlyList<ThemeOption> LanguageOptions { get; } =
     [
         new("system", L.Get("Settings.LanguageSystem")),
+        new("zh-Hans", L.Get("Settings.LanguageSimplifiedChinese")),
         new("en-US", L.Get("Settings.LanguageEnglish")),
-        new("pt-BR", L.Get("Settings.LanguagePortuguese")),
-        new("zh-Hans", L.Get("Settings.LanguageSimplifiedChinese"))
+        new("pt-BR", L.Get("Settings.LanguagePortuguese"))
     ];
 
-    public ObservableCollection<TextOption> ThemeOptions { get; } = new()
+    public ObservableCollection<ThemeOption> ThemeOptions { get; } = new()
     {
         new("default", L.Get("Settings.ThemeSystem")),
         new("light", L.Get("Settings.ThemeLight")),
@@ -124,7 +124,7 @@ public partial class SettingsViewModel : ObservableObject
 
     public record BackdropOption(int Value, string Label);
 
-    public record TextOption(string Value, string Label);
+    public record ThemeOption(string Value, string Label);
 
     [ObservableProperty]
     public partial string CloseBehavior { get; set; }
@@ -196,7 +196,7 @@ public partial class SettingsViewModel : ObservableObject
     partial void OnLanguageChanged(string value)
     {
         if (!string.IsNullOrEmpty(value))
-            AutoSave(() => _host.Settings.SetLanguageAsync(value), "Settings.LanguageSaved");
+            AutoSave(() => _host.Settings.SetLanguageAsync(value));
     }
 
     partial void OnThemeChanged(string value)
@@ -229,30 +229,30 @@ public partial class SettingsViewModel : ObservableObject
     partial void OnComposeDirectoryChanged(string value)
         => AutoSave(() => _host.Settings.SetComposeDirectoryAsync(value));
 
-    private void AutoSave(Func<Task> save, string messageKey = "Settings.Saved")
+    private void AutoSave(Func<Task> save)
     {
         if (!IsLoaded) return;
-        _ = RunAutoSaveAsync(save, messageKey);
+        _ = RunAutoSaveAsync(save);
     }
 
-    private async Task RunAutoSaveAsync(Func<Task> save, string messageKey)
+    private async Task RunAutoSaveAsync(Func<Task> save)
     {
         try
         {
             await save();
-            NotifyAutoSaved(messageKey);
+            NotifyAutoSaved();
         }
         catch (Exception ex)
         {
             ErrorMessage = ex.Message;
             HasError = true;
-            global::WSLCC_App.App.WriteLog(L.GetFormat("Settings.AutoSaveError", ex));
+            global::WSLCC_App.App.WriteLog($"设置自动保存失败：{ex}");
         }
     }
 
-    private void NotifyAutoSaved(string messageKey = "Settings.Saved")
+    private void NotifyAutoSaved()
     {
-        SaveMessage = L.Get(messageKey);
+        SaveMessage = L.Get("Settings.Saved");
         HasSaveMessage = true;
     }
 
@@ -320,7 +320,6 @@ public partial class SettingsViewModel : ObservableObject
 
     public async Task LoadAsync()
     {
-        IsLoaded = false;
         HasError = false;
         try
         {
@@ -435,7 +434,7 @@ await _host.Settings.SetAutoCheckUpdateEnabledAsync(AutoCheckUpdate);
         {
             ErrorMessage = ex.Message;
             HasError = true;
-            global::WSLCC_App.App.WriteLog(L.GetFormat("Settings.SaveError", ex));
+            global::WSLCC_App.App.WriteLog($"设置保存失败：{ex}");
         }
     }
 }

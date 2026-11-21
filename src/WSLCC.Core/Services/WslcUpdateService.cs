@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
-using WSLCC_App;
 
 namespace WSLCC.Core.Services;
 
@@ -22,7 +21,7 @@ public interface IWslcUpdateService
 
 public sealed class WslcUpdateService : IWslcUpdateService
 {
-    private const string ReleasesApi = "https://api.github.com/repos/mauriciomenon/wslcc/releases/latest";
+    private const string ReleasesApi = "https://api.github.com/repos/iwvw/wslcc/releases/latest";
 
     public static string InstallerAssetName { get; set; } = "WSLCC-Setup.exe";
 
@@ -68,9 +67,7 @@ public sealed class WslcUpdateService : IWslcUpdateService
         }
         catch (Exception ex)
         {
-            // GitHub returns 404 until the fork publishes its first release.
-            var error = ex is HttpRequestException { StatusCode: System.Net.HttpStatusCode.NotFound } ? null : ex.Message;
-            var result = new UpdateInfo(current, null, null, null, error, false);
+            var result = new UpdateInfo(current, null, null, null, ex.Message, false);
             LastResult = result;
             return result;
         }
@@ -80,10 +77,10 @@ public sealed class WslcUpdateService : IWslcUpdateService
     {
         var info = LastResult ?? await CheckAsync(ct);
         if (info.Error is not null)
-            return info with { Error = L.GetFormat("Core.Update.Info", info.Error) };
+            return info with { Error = "无法获取更新信息：" + info.Error };
 
         if (string.IsNullOrEmpty(info.DownloadUrl) && string.IsNullOrEmpty(downloadUrl))
-            return info with { Error = L.GetFormat("Core.Update.NoInstaller", InstallerAssetName) };
+            return info with { Error = $"发布中未找到安装包（{InstallerAssetName}）" };
 
         var url = !string.IsNullOrEmpty(downloadUrl) ? downloadUrl : info.DownloadUrl;
         var dest = Path.Combine(
@@ -123,7 +120,7 @@ public sealed class WslcUpdateService : IWslcUpdateService
         }
         catch (Exception ex)
         {
-            return info with { Error = L.GetFormat("Core.Update.Install", ex.Message) };
+            return info with { Error = "下载或启动安装失败：" + ex.Message };
         }
     }
 

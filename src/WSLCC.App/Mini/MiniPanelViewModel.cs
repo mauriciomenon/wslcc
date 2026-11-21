@@ -75,7 +75,7 @@ public sealed partial class MiniPanelViewModel : ObservableObject
             catch (Exception ex)
             {
                 stats = new Dictionary<string, ContainerStats>();
-                global::WSLCC_App.App.WriteLog(L.GetFormat("MiniPanel.StatsReadFailed", ex));
+                global::WSLCC_App.App.WriteLog($"迷你面板统计获取失败：{ex}");
             }
 
             Merge(list);
@@ -119,7 +119,7 @@ public sealed partial class MiniPanelViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            global::WSLCC_App.App.WriteLog(L.GetFormat("MiniPanel.StatsRefreshFailed", ex));
+            global::WSLCC_App.App.WriteLog($"迷你面板统计刷新失败：{ex}");
         }
     }
 

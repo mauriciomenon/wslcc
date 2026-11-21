@@ -203,8 +203,6 @@ public partial class HomeViewModel : ObservableObject
         var missingWslc = text.Contains("无法识别的命令", StringComparison.OrdinalIgnoreCase)
             || text.Contains("not recognized", StringComparison.OrdinalIgnoreCase)
             || text.Contains("not found", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("foi reconhecido", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("encontrar o arquivo especificado", StringComparison.OrdinalIgnoreCase)
             || text.Contains("未找到 wslc", StringComparison.OrdinalIgnoreCase)
             || text.Contains("wslc.exe", StringComparison.OrdinalIgnoreCase);
         var networkIssue = text.Contains("网络", StringComparison.OrdinalIgnoreCase)
@@ -212,9 +210,6 @@ public partial class HomeViewModel : ObservableObject
             || text.Contains("timeout", StringComparison.OrdinalIgnoreCase)
             || text.Contains("拒绝", StringComparison.OrdinalIgnoreCase)
             || text.Contains("refused", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("de rede", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("tempo limite", StringComparison.OrdinalIgnoreCase)
-            || text.Contains("recusad", StringComparison.OrdinalIgnoreCase)
             || text.Contains("E_UNEXPECTED", StringComparison.OrdinalIgnoreCase)
             || text.Contains("灾难性故障", StringComparison.OrdinalIgnoreCase)
             || text.Contains("catastrophic", StringComparison.OrdinalIgnoreCase);

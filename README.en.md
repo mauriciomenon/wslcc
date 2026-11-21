@@ -11,7 +11,7 @@
 
 In this fork, open **Settings > Appearance > Language** to follow the system language or choose English, Portuguese (Brazil) or Simplified Chinese. Quit WSLCC completely, including the tray icon, then reopen it to apply the change.
 
-Project documentation is available in [Chinese](docs), [English](docs/en) and [Portuguese (Brazil)](docs/pt-BR).
+See the [original project documentation](https://github.com/iwvw/wslcc/tree/main/docs).
 
 ## Documentation from the original project
 

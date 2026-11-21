@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.Json;
 using WSLCC.Core.Cli;
-using WSLCC_App;
 
 namespace WSLCC.Core.Services;
 
@@ -106,12 +105,12 @@ public sealed class WslcInstallService : IWslcInstallService
             using var process = Process.Start(psi);
             return Task.FromResult(
                 process is null
-                    ? L.Get("Core.Install.StartFailed")
-                    : L.Get("Core.Install.Prompt"));
+                    ? "未能启动 wsl.exe，请手动打开 PowerShell（管理员）执行：wsl --update"
+                    : "已弹窗请求管理员权限，wsl --update 将更新 WSL（含正式版 wslc 容器组件）。请在弹出的窗口中选择“是”。");
         }
         catch (Win32Exception)
         {
-            return Task.FromResult(L.Get("Core.Install.AccessDenied"));
+            return Task.FromResult("管理员权限被拒绝或 wsl.exe 不可用，可手动执行：wsl --update");
         }
     }
 }

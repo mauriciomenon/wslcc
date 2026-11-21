@@ -75,17 +75,17 @@ public partial class App : Application
             return;
         }
 
+        var language = "system";
         try
         {
             await WslcHost.Default.InitializeAsync();
-            L.SetLanguage(await WslcHost.Default.Settings.GetLanguageAsync());
+            language = await WslcHost.Default.Settings.GetLanguageAsync();
         }
         catch (Exception ex)
         {
-            WriteLog(L.GetFormat("App.Log.Init", ex));
+            WriteLog($"InitializeAsync failed: {ex}");
         }
-        Microsoft.Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride =
-            L.ResolveLanguage(System.Globalization.CultureInfo.CurrentUICulture.Name).Name;
+        L.SetLanguage(language);
         InitializeComponent();
         _window = new MainWindow();
         Main = (MainWindow)_window;
@@ -115,7 +115,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            WriteLog(L.GetFormat("App.Log.Instance", ex));
+            WriteLog($"单实例注册失败，按普通启动处理：{ex}");
             return true;
         }
     }
@@ -135,7 +135,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            WriteLog(L.GetFormat("App.Log.Minimize", ex));
+            WriteLog($"启动最小化失败：{ex}");
         }
     }
 
@@ -148,7 +148,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            WriteLog(L.GetFormat("App.Log.Session", ex));
+            WriteLog($"应用会话配置失败：{ex}");
         }
     }
 
@@ -160,11 +160,11 @@ public partial class App : Application
             var sessions = await WslcHost.Default.System.ListSessionsAsync().ConfigureAwait(false);
             if (sessions.Any(s => s.Name.Equals(configuredName, StringComparison.OrdinalIgnoreCase)))
                 return configuredName;
-            WriteLog(L.GetFormat("App.Log.SessionMissing", configuredName));
+            WriteLog($"会话 '{configuredName}' 不存在，回退到 wslc 默认会话。");
         }
         catch (Exception ex)
         {
-            WriteLog(L.GetFormat("App.Log.SessionCheck", configuredName, ex));
+            WriteLog($"校验会话 '{configuredName}' 失败，回退到默认会话：{ex}");
         }
         return null;
     }
@@ -178,7 +178,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            WriteLog(L.GetFormat("App.Log.Migrate", ex));
+            WriteLog($"迁移旧 Compose 目录失败：{ex}");
         }
     }
 
@@ -193,7 +193,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            WriteLog(L.GetFormat("App.Log.Update", ex));
+            WriteLog($"检查更新失败：{ex}");
         }
     }
 
@@ -215,13 +215,13 @@ public partial class App : Application
                 }
                 catch (Exception ex)
                 {
-                    WriteLog(L.GetFormat("App.Log.Container", s.Name, ex));
+                    WriteLog($"启动容器 {s.Name} 失败：{ex}");
                 }
             }
         }
         catch (Exception ex)
         {
-            WriteLog(L.GetFormat("App.Log.Restore", ex));
+            WriteLog($"恢复开机容器失败：{ex}");
         }
     }
 }
