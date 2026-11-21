@@ -1,82 +1,82 @@
 <div align="center">
   <img src="src/WSLCC.App/Assets/AppIcon.png" alt="WSLCC" width="120" />
   <h1>WSLCC</h1>
-  <p>Windows 上的 WSL 容器（wslc）桌面管理器</p>
-  <p>基于微软官方 WSL Container API 与 wslc CLI，提供镜像、容器、Compose 编排、卷、日志的图形化管理。</p>
+  <p>Gerenciador de containers WSL (wslc) para Windows</p>
+  <p>Gerencie imagens, containers, projetos Compose, volumes e logs pela interface grafica que usa a WSL Container API da Microsoft e a CLI wslc.</p>
 </div>
 
-[简体中文](README.md) | [English](README.en.md) | [Portugues (Brasil)](README.pt-BR.md)
+[Portugues (Brasil)](README.md) | [English](README.en.md) | [简体中文](README.zh-CN.md)
 
-## 界面语言
+## Idioma da interface
 
-在本分支中，打开 **设置 > 外观 > 语言**，可选择跟随系统、英语、巴西葡萄牙语或简体中文。完全退出 WSLCC（包括托盘图标）后重新打开即可生效。
+Neste fork, abra **Configuracoes > Aparencia > Idioma** para seguir o idioma do sistema ou escolher ingles, portugues do Brasil ou chines simplificado. Encerre o WSLCC pelo icone da bandeja e abra o aplicativo novamente para aplicar a mudanca.
 
-项目文档：[中文](docs) | [English](docs/en) | [Portugues (Brasil)](docs/pt-BR)。
+Consulte a documentacao do projeto em [chines](docs), [ingles](docs/en) ou [portugues do Brasil](docs/pt-BR).
 
-## 特性
+## Recursos
 
-- 仪表盘：环境状态、资源配额、活动会话（可一键打开会话终端）
-- 容器：列表（自动抓取网页图标）、资源统计、启停/重启/删除、打开端口网址、日志（尾行数/时间戳/时间范围）、详情、终端、文件复制（可选跟随符号链接）、创建（含卷/挂载、环境、健康检查、网络别名、资源限制等）
-- 编排：Compose 项目部署、编辑、重建、停止、删除；部署进度可视化（分步进度 + 日志），支持复用本地镜像或强制拉取最新
-- 镜像：查看（可显示摘要、中间层）、删除、拉取记录、详情、清理未使用、全标签拉取
-- 卷：挂载卷管理、清理未使用
-- 网络：查看、创建、删除、连接/断开容器、详情、清理未使用
-- 事件：容器与网络生命周期事件（历史查询与实时监听）
-- 资源清理：容器/镜像/卷/网络一键 prune
-- 日志与审计：容器日志查看、操作留痕
-- 迷你面板：托盘左键唤出右下角浮层，快速查看容器状态、启停/重启、打开端口、启停 wslc 会话，支持下拉手势收起
-- 错误反馈：一键复制诊断信息并跳转 GitHub 新建 issue
-- 设置：会话（写入官方 wslc settings.yaml）、镜像加速、外观（主题色 / 背景材质）、启动时最小化到托盘，采用 Windows 11 设置式分组卡片
-- 内存优化：隐藏到托盘后释放主窗口页面，工作集可降至约 40 MB
+- **Painel.** Consulte o estado do ambiente, as cotas de recursos e as sessoes ativas. Abra o terminal de uma sessao com um clique.
+- **Containers.** Liste os containers com os icones obtidos automaticamente dos sites, consulte detalhes e uso de recursos, inicie, pare, reinicie ou remova containers. Abra as portas expostas no navegador, acesse um terminal e copie arquivos com a opcao de seguir links simbolicos. Consulte os logs por quantidade de linhas finais, com marcas de tempo ou por intervalo. Crie containers com volumes, montagens, variaveis de ambiente, verificacoes de integridade, aliases de rede e limites de recursos.
+- **Compose.** Implante, edite, reconstrua, pare e remova projetos. Acompanhe cada etapa da implantacao e seus logs. Reutilize as imagens locais ou baixe as versoes mais recentes.
+- **Imagens.** Consulte detalhes, digests e camadas intermediarias. Veja o historico de downloads, baixe todas as tags, remova imagens especificas ou limpe as imagens sem uso.
+- **Volumes.** Gerencie volumes montados e remova os que estao sem uso.
+- **Redes.** Liste, inspecione, crie e remova redes. Conecte ou desconecte containers e remova redes sem uso.
+- **Eventos.** Consulte o historico de eventos do ciclo de vida de containers e redes ou acompanhe os eventos em tempo real.
+- **Limpeza.** Remova containers, imagens, volumes e redes sem uso com um clique.
+- **Logs e auditoria.** Consulte os logs dos containers e o registro das operacoes.
+- **Minipainel.** Clique com o botao esquerdo no icone da bandeja para abrir o painel no canto inferior direito. Consulte o estado dos containers, inicie, pare ou reinicie um container, abra portas expostas e inicie ou pare a sessao wslc. Deslize para baixo para recolher o painel.
+- **Relatos de erros.** Copie os dados de diagnostico e abra uma issue no GitHub com um clique.
+- **Configuracoes.** Configure a sessao no arquivo oficial `settings.yaml` do wslc, defina um espelho do registro de imagens, escolha o tema e o material de fundo ou inicie o aplicativo minimizado na bandeja. As opcoes aparecem em cartoes agrupados no estilo do Windows 11.
+- **Uso de memoria.** Ao ocultar o WSLCC na bandeja, o aplicativo libera as paginas da janela principal. A memoria residente do processo pode cair para cerca de 40 MB.
 
-## 环境要求
+## Requisitos
 
-- Windows 10/11（x64）
-- [WSL 容器（wslc）](https://github.com/MicrosoftDocs/wsl/blob/main/WSL/wsl-container.md)（微软官方 WSL 容器 CLI，现已正式发布，需 `wsl --update`）
-- .NET 10 SDK（开发构建）
-- 分离版额外需要：.NET 10 桌面运行时 与 Windows App Runtime 2.4（合并版无需）
+- Windows 10 ou 11 (x64).
+- CLI WSL Containers da Microsoft, ja disponivel para uso geral. Atualize o WSL com `wsl --update`. [Documentacao do WSL Containers](https://github.com/MicrosoftDocs/wsl/blob/main/WSL/wsl-container.md)
+- SDK do .NET 10 para compilar o projeto.
+- A edicao dependente de framework tambem exige o .NET 10 Desktop Runtime e o Windows App Runtime 2.4. A edicao autocontida inclui os runtimes.
 
-## 构建
+## Compilacao
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File build.ps1
 ```
 
-首次构建会自动下载 `Microsoft.WSL.Containers` SDK 包到 `nuget-packages/`（该包仅随 microsoft/WSL 的 GitHub Release 发布，不在 nuget.org）。也可手动执行 `scripts/fetch-wslc-sdk.ps1`。
+Na primeira compilacao, o script baixa o pacote do SDK `Microsoft.WSL.Containers` para `nuget-packages/`. A Microsoft distribui esse pacote exclusivamente pelas releases de microsoft/WSL no GitHub. Tambem e possivel executar `scripts/fetch-wslc-sdk.ps1` manualmente.
 
-## 打包发布
+## Empacotamento e releases
 
-提供两种发布模式：
-
-- **合并版（自包含）**：内置 .NET 运行时，开箱即用，体积较大。
-- **分离版（框架依赖）**：不含运行时，体积小，需系统已安装 .NET 10 桌面运行时与 Windows App Runtime 2.4。
+- **Autocontida.** Esta edicao e maior, inclui o runtime do .NET e pode ser executada logo apos a extracao.
+- **Dependente de framework.** Esta edicao e menor e usa o .NET 10 Desktop Runtime e o Windows App Runtime 2.4 instalados no sistema.
 
 ```powershell
-# 合并版（默认）
+# Autocontida (padrao)
 powershell -ExecutionPolicy Bypass -File publish.ps1
 
-# 分离版（框架依赖）
+# Dependente de framework
 powershell -ExecutionPolicy Bypass -File publish.ps1 -Framework
 ```
 
-产物为自包含/框架依赖单目录 zip，解压即可运行。加 `-InnoSetup` 可一并生成对应安装器。
+Cada comando gera um ZIP que contem o aplicativo em uma unica pasta. Extraia o arquivo e execute o WSLCC. Acrescente `-InnoSetup` para gerar tambem o instalador da edicao escolhida.
 
-推送 `v*` 标签会触发 GitHub Actions 自动构建并创建 Release，产物包括：
+O envio de uma tag com o padrao `v*` aciona o fluxo do GitHub Actions que compila o projeto e cria uma release com os seguintes arquivos.
 
-- 合并版：`WSLCC-win-x64.zip`、`WSLCC-Setup.exe`
-- 分离版：`WSLCC-win-x64-framework.zip`、`WSLCC-Setup-framework.exe`
+| Edicao | Arquivo ZIP | Instalador |
+| --- | --- | --- |
+| Autocontida | `WSLCC-win-x64.zip` | `WSLCC-Setup.exe` |
+| Dependente de framework | `WSLCC-win-x64-framework.zip` | `WSLCC-Setup-framework.exe` |
 
-应用内置自更新流程，检测到新版本后按当前安装模式下载对应安装包并自动完成替换升级。
+O atualizador integrado detecta novas versoes, baixa o pacote correspondente a edicao instalada e substitui a versao atual.
 
-## 贡献者
+## Colaboradores
 
-- [lemonno2333](https://github.com/lemonno2333) - 应用图标设计
-- [DSUK](https://github.com/iwvw) - 项目开发
+- Design do icone do aplicativo por [lemonno2333](https://github.com/lemonno2333).
+- Desenvolvimento do projeto por [DSUK](https://github.com/iwvw).
 
-## 友情链接
+## Comunidade
 
-- [Linux.do](https://linux.do) - 技术社区
+- Discussoes sobre tecnologia no [Linux.do](https://linux.do).
 
-## 许可证
+## Licenca
 
-本项目采用 [MIT License](LICENSE)。
+O WSLCC usa a [licenca MIT](LICENSE).

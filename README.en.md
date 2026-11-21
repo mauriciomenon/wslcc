@@ -5,7 +5,7 @@
   <p>Manage images, containers, Compose projects, volumes and logs through Microsoft's WSL Container API and the wslc CLI.</p>
 </div>
 
-[简体中文](README.md) | [English](README.en.md) | [Portugues (Brasil)](README.pt-BR.md)
+[Portugues (Brasil)](README.md) | [English](README.en.md) | [简体中文](README.zh-CN.md)
 
 ## Interface language
 
