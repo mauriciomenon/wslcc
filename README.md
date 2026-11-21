@@ -1,6 +1,6 @@
 <div align="center">
   <img src="src/WSLCC.App/Assets/AppIcon.png" alt="WSLCC" width="120" />
-  <p><strong>WSLCC | Fork dedicado exclusivamente a traducao</strong></p>
+  <p><strong>WSLCC | Fork dedicado exclusivamente a traducao pt-br e en, sem alteracoes no codigo</strong></p>
   <h1><a href="https://github.com/iwvw/wslcc">Projeto original: iwvw/wslcc</a></h1>
   <p>O WSLCC foi desenvolvido por iwvw e pelos colaboradores do projeto original. Este fork traduz a interface e a documentacao para portugues do Brasil e ingles.</p>
 </div>
