@@ -1,6 +1,8 @@
 using System.Text;
 using YamlDotNet.RepresentationModel;
 
+using WSLCC_App;
+
 namespace WSLCC.Core.Services;
 
 public sealed record WslcSessionFileSettings(
@@ -84,9 +86,9 @@ public sealed class WslcSettingsFileService : IWslcSettingsFileService
 
         if (lines.Count == 0)
         {
-            lines.Add("# wslc user settings");
+            lines.Add("# " + L.Get("Core.Settings.FileHeader"));
             lines.Add("# https://aka.ms/wslc-settings");
-            lines.Add("# All settings support string value \"default\" which uses built-in defaults.");
+            lines.Add("# " + L.Get("Core.Settings.DefaultValue"));
             lines.Add(string.Empty);
             lines.Add("session:");
         }

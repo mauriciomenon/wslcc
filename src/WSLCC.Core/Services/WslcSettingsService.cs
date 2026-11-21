@@ -207,7 +207,7 @@ public sealed class WslcSettingsService : IWslcSettingsService
         => await _repository.GetAsync(KeyLanguage) ?? "system";
 
     public Task SetLanguageAsync(string language)
-        => _repository.SetAsync(KeyLanguage, language is "zh-Hans" or "en-US" ? language : "system");
+        => _repository.SetAsync(KeyLanguage, language is "zh-Hans" or "en-US" or "pt-BR" ? language : "system");
 
     public Task<Dictionary<string, string>> GetAllAsync() => _repository.GetAllAsync();
 }

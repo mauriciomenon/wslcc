@@ -58,7 +58,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            App.WriteLog($"创建托盘图标失败：{ex}");
+            App.WriteLog(L.GetFormat("MainWindow.TrayCreateFailed", ex));
         }
     }
 
@@ -188,7 +188,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            App.WriteLog($"释放页面内容失败：{ex}");
+            App.WriteLog(L.GetFormat("MainWindow.ReleasePageFailed", ex));
         }
     }
 
@@ -217,7 +217,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            App.WriteLog($"恢复页面内容失败：{ex}");
+            App.WriteLog(L.GetFormat("MainWindow.RestorePageFailed", ex));
             NavFrame.Navigate(typeof(HomePage));
         }
     }
@@ -236,7 +236,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            App.WriteLog($"读取托盘偏好失败：{ex}");
+            App.WriteLog(L.GetFormat("MainWindow.TrayPreferencesFailed", ex));
         }
     }
 
@@ -409,7 +409,7 @@ public sealed partial class MainWindow : Window
                 NavFrame.Navigate(typeof(AboutPage));
                 break;
             default:
-                throw new InvalidOperationException($"Unknown navigation item tag: {item.Tag}");
+                throw new InvalidOperationException(L.GetFormat("MainWindow.UnknownNavTag", item.Tag));
         }
     }
 }

@@ -3,6 +3,7 @@
     x:Class="WSLCC.App.Pages.ImagesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:loc="using:WSLCC_App"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:WSLCC.App.ViewModels"
@@ -24,11 +25,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Spacing="2">
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="镜像" />
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{loc:Tr Key=ImagesPage.Title.Text}" />
                 <TextBlock
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="本地镜像的拉取与管理" />
+                    Text="{loc:Tr Key=ImagesPage.Subtitle.Text}" />
             </StackPanel>
             <StackPanel
                 Grid.Column="1"
@@ -36,18 +37,18 @@
                 Spacing="8"
                 VerticalAlignment="Center">
                 <CheckBox
-                    Content="显示中间层镜像（--all）"
+                    Content="{loc:Tr Key=ImagesPage.ShowIntermediate}"
                     IsChecked="{x:Bind ViewModel.ShowIntermediate, Mode=TwoWay}" />
                 <CheckBox
-                    Content="显示摘要（--digests）"
+                    Content="{loc:Tr Key=ImagesPage.ShowDigests}"
                     IsChecked="{x:Bind ViewModel.ShowDigests, Mode=TwoWay}"
                     IsEnabled="{x:Bind ViewModel.DigestSupported, Mode=OneWay}" />
                 <Button
                     Click="Prune_Click"
-                    Content="清理未使用" />
+                    Content="{loc:Tr Key=ImagesPage.PruneButton.Content}" />
                 <Button
                     Command="{x:Bind ViewModel.RefreshCommand}"
-                    Content="刷新" />
+                    Content="{loc:Tr Key=ImagesPage.RefreshButton.Content}" />
             </StackPanel>
         </Grid>
 
@@ -57,15 +58,15 @@
             Spacing="8">
             <TextBox
                 Width="360"
-                PlaceholderText="镜像名称，如 nginx:latest"
+                PlaceholderText="{loc:Tr Key=ImagesPage.ImageNameBox.PlaceholderText}"
                 Text="{x:Bind ViewModel.PullImageText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <Button
                 VerticalAlignment="Stretch"
                 Command="{x:Bind ViewModel.PullCommand}"
-                Content="拉取" />
+                Content="{loc:Tr Key=ImagesPage.PullButton.Content}" />
             <CheckBox
                 VerticalAlignment="Center"
-                Content="全部标签（--all-tags）"
+                Content="{loc:Tr Key=ImagesPage.AllTags}"
                 IsChecked="{x:Bind ViewModel.PullAllTags, Mode=TwoWay}"
                 IsEnabled="{x:Bind ViewModel.PullAllTagsSupported, Mode=OneWay}" />
             <TextBlock
@@ -82,7 +83,7 @@
             IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
             Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
             Severity="Error"
-            Title="操作失败" />
+            Title="{loc:Tr Key=ImagesPage.ErrorInfoBar.Title}" />
 
         <Grid Grid.Row="3">
             <controls:SkeletonGrid IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
@@ -94,7 +95,7 @@
                 Style="{StaticResource BodyTextBlockStyle}"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 IsHitTestVisible="False"
-                Text="暂无本地镜像，输入镜像名点击拉取开始"
+                Text="{loc:Tr Key=ImagesPage.EmptyText.Text}"
                 Visibility="{x:Bind ViewModel.HasImages, Converter={StaticResource InverseBoolToVis}, Mode=OneWay}" />
             <ListView
                 ItemsSource="{x:Bind ViewModel.Images, Mode=OneWay}"
@@ -160,14 +161,14 @@
                                         MinWidth="0" MinHeight="0"
                                         Padding="8,3"
                                         Click="ImageAction_Click"
-                                        Content="详情"
+                                        Content="{loc:Tr Key=ImagesPage.InspectAction}"
                                         Tag="inspect" />
                                     <Button
                                         MinWidth="0" MinHeight="0"
                                         Padding="8,3"
                                         Foreground="{ThemeResource SystemFillColorCriticalBrush}"
                                         Click="ImageAction_Click"
-                                        Content="删除"
+                                        Content="{loc:Tr Key=ImagesPage.DeleteButton.Content}"
                                         Tag="delete" />
                                 </StackPanel>
                             </Grid>

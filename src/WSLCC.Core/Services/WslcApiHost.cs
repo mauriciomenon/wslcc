@@ -1,5 +1,6 @@
 using Microsoft.WSL.Containers;
 using WSLCC.Core.Models;
+using WSLCC_App;
 
 namespace WSLCC.Core.Services;
 
@@ -123,7 +124,7 @@ public sealed class WslcApiHost : IWslcApiHost
         await _gate.WaitAsync(ct).ConfigureAwait(false);
         try
         {
-            return _session ?? throw new InvalidOperationException("WSLC session is not started.");
+            return _session ?? throw new InvalidOperationException(L.Get("Core.Session.NotStarted"));
         }
         finally
         {

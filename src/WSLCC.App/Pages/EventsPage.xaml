@@ -3,6 +3,7 @@
     x:Class="WSLCC.App.Pages.EventsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:loc="using:WSLCC_App"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:WSLCC.App.ViewModels"
@@ -24,11 +25,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Spacing="2">
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="事件" />
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{loc:Tr Key=Feedback.Page.Events}" />
                 <TextBlock
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="容器与网络生命周期事件（wslc events）" />
+                    Text="{loc:Tr Key=Events.Subtitle}" />
             </StackPanel>
             <StackPanel
                 Grid.Column="1"
@@ -37,7 +38,7 @@
                 VerticalAlignment="Center">
                 <Button
                     Command="{x:Bind ViewModel.RefreshCommand}"
-                    Content="刷新"
+                    Content="{loc:Tr Key=Activity.RefreshButton.Content}"
                     IsEnabled="{x:Bind ViewModel.IsSupported, Mode=OneWay}" />
                 <Button
                     Command="{x:Bind ViewModel.ToggleStreamCommand}"
@@ -52,23 +53,23 @@
             Spacing="12">
             <TextBox
                 Width="220"
-                Header="起始时间"
-                PlaceholderText="Unix 秒或 RFC3339"
+                Header="{loc:Tr Key=TimeFilter.Since}"
+                PlaceholderText="{loc:Tr Key=TimeFilter.TimestampHint}"
                 Text="{x:Bind ViewModel.SinceText, Mode=TwoWay}" />
             <TextBox
                 Width="220"
-                Header="截止时间"
-                PlaceholderText="Unix 秒或 RFC3339"
+                Header="{loc:Tr Key=TimeFilter.Until}"
+                PlaceholderText="{loc:Tr Key=TimeFilter.TimestampHint}"
                 Text="{x:Bind ViewModel.UntilText, Mode=TwoWay}" />
             <TextBox
                 Width="160"
-                Header="类型筛选"
+                Header="{loc:Tr Key=Events.TypeFilter}"
                 PlaceholderText="container / network"
                 Text="{x:Bind ViewModel.FilterTypeText, Mode=TwoWay}" />
             <TextBox
                 Width="220"
-                Header="容器筛选"
-                PlaceholderText="容器名称或 ID"
+                Header="{loc:Tr Key=Events.ContainerFilter}"
+                PlaceholderText="{loc:Tr Key=Events.ContainerHint}"
                 Text="{x:Bind ViewModel.FilterContainerText, Mode=TwoWay}" />
         </StackPanel>
 
@@ -79,15 +80,15 @@
             IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
             Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
             Severity="Error"
-            Title="操作失败" />
+            Title="{loc:Tr Key=Activity.ErrorBar.Title}" />
 
         <InfoBar
             Grid.Row="3"
             IsClosable="False"
             IsOpen="{x:Bind ViewModel.Unsupported, Mode=OneWay}"
-            Message="当前 wslc 版本不支持 events 命令，请升级到 WSL 2.9.13 或更高版本（wsl --update）。"
+            Message="{loc:Tr Key=Events.UnsupportedMessage}"
             Severity="Informational"
-            Title="功能不可用" />
+            Title="{loc:Tr Key=Events.Unavailable}" />
 
         <Grid Grid.Row="4">
             <TextBlock
@@ -96,7 +97,7 @@
                 Style="{StaticResource BodyTextBlockStyle}"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 IsHitTestVisible="False"
-                Text="暂无事件记录"
+                Text="{loc:Tr Key=Events.Empty}"
                 Visibility="{x:Bind ViewModel.HasEvents, Converter={StaticResource InverseBoolToVis}, Mode=OneWay}" />
             <ListView
                 ItemsSource="{x:Bind ViewModel.Events, Mode=OneWay}"

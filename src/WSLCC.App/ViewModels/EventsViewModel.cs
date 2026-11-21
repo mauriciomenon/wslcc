@@ -52,7 +52,7 @@ public partial class EventsViewModel : ObservableObject
 
     public bool Unsupported => !IsSupported;
 
-    public string StreamButtonText => IsStreaming ? "停止监听" : "实时监听";
+    public string StreamButtonText => IsStreaming ? L.Get("Events.StopStream") : L.Get("Events.StartStream");
 
     [ObservableProperty]
     public partial string SinceText { get; set; }

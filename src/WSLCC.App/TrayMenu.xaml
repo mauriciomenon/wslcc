@@ -8,28 +8,27 @@
         x:Key="WslccTrayIcon"
         IconSource="ms-appx:///Assets/AppIcon.ico"
         NoLeftClickDelay="True"
-        ToolTipText="WSLCC"
         Visibility="Collapsed">
         <tb:TaskbarIcon.ContextFlyout>
             <MenuFlyout AreOpenCloseAnimationsEnabled="False">
-                <MenuFlyoutItem FontSize="13" Text="Open">
+                <MenuFlyoutItem FontSize="13">
                     <MenuFlyoutItem.Icon>
                         <FontIcon FontSize="14" Glyph="&#xE8A7;" />
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
-                <MenuFlyoutItem FontSize="13" Text="MiniPanel">
+                <MenuFlyoutItem FontSize="13">
                     <MenuFlyoutItem.Icon>
                         <FontIcon FontSize="14" Glyph="&#xE7C4;" />
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
-                <MenuFlyoutItem FontSize="13" Text="Settings">
+                <MenuFlyoutItem FontSize="13">
                     <MenuFlyoutItem.Icon>
                         <FontIcon FontSize="14" Glyph="&#xE713;" />
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
-                <MenuFlyoutItem FontSize="13" Text="Exit">
+                <MenuFlyoutItem FontSize="13">
                     <MenuFlyoutItem.Icon>
                         <FontIcon FontSize="14" Glyph="&#xE7E8;" />
                     </MenuFlyoutItem.Icon>

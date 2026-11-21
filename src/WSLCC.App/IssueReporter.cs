@@ -82,7 +82,7 @@ public static class IssueReporter
         }
         catch (Exception ex)
         {
-            global::WSLCC_App.App.WriteLog($"复制诊断信息失败：{ex}");
+            global::WSLCC_App.App.WriteLog(L.GetFormat("Feedback.CopyFailed", ex));
         }
     }
 
@@ -112,7 +112,7 @@ public static class IssueReporter
         }
         catch (Exception ex)
         {
-            global::WSLCC_App.App.WriteLog($"打开反馈链接失败：{ex}");
+            global::WSLCC_App.App.WriteLog(L.GetFormat("Feedback.OpenLinkFailed", ex));
         }
     }
 

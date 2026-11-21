@@ -14,6 +14,7 @@ public sealed partial class ComposePage : Page
     public ComposeViewModel ViewModel { get; }
 
     private ComposeProjectItemViewModel? _editingProject;
+    private string? _editorFilePath;
 
     private bool _loaded;
 
@@ -48,7 +49,7 @@ public sealed partial class ComposePage : Page
         }
         catch (Exception ex)
         {
-            global::WSLCC_App.App.WriteLog($"打开 Compose 目录失败：{ex}");
+            global::WSLCC_App.App.WriteLog(L.GetFormat("ComposePage.OpenDirFailed", ex));
         }
     }
 
@@ -72,7 +73,7 @@ public sealed partial class ComposePage : Page
         }
         catch (Exception ex)
         {
-            global::WSLCC_App.App.WriteLog($"更改 Compose 目录失败：{ex}");
+            global::WSLCC_App.App.WriteLog(L.GetFormat("ComposePage.ChangeDirFailed", ex));
         }
     }
 
@@ -101,7 +102,7 @@ public sealed partial class ComposePage : Page
         }
         catch (Exception ex)
         {
-            global::WSLCC_App.App.WriteLog($"打开项目目录失败：{ex}");
+            global::WSLCC_App.App.WriteLog(L.GetFormat("ComposePage.OpenProjectDirFailed", ex));
         }
     }
 
@@ -122,7 +123,7 @@ public sealed partial class ComposePage : Page
             project.FilePath ?? L.Get("ComposePage.NoRecordedPath"));
         _editingProject = project;
         ShowEditor(L.GetFormat("ComposePage.EditProjectTitle", project.Name),
-            project.FilePath ?? L.Get("ComposePage.NoRecordedPath"), content, showMirror: false, string.Empty);
+            project.FilePath, content, showMirror: false, string.Empty);
     }
 
     private async void RebuildProject_Click(object sender, RoutedEventArgs e)
@@ -223,7 +224,9 @@ public sealed partial class ComposePage : Page
     private void ShowEditor(string title, string? filePath, string? content, bool showMirror, string defaultMirror)
     {
         EditorTitleText.Text = title;
-        EditorPathText.Text = filePath ?? L.Get("ComposePage.NoFileSelected");
+        _editorFilePath = filePath;
+        EditorPathText.Text = filePath ?? L.Get(_editingProject is null
+            ? "ComposePage.NoFileSelected" : "ComposePage.NoRecordedPath");
         EditorBox.Document.SetText(TextSetOptions.None, content ?? string.Empty);
         MirrorBox.Visibility = showMirror ? Visibility.Visible : Visibility.Collapsed;
         ProjectNameBox.Visibility = showMirror ? Visibility.Visible : Visibility.Collapsed;
@@ -261,10 +264,12 @@ public sealed partial class ComposePage : Page
             if (file is null) return;
             var content = await File.ReadAllTextAsync(file.Path);
             EditorBox.Document.SetText(TextSetOptions.None, content);
+            _editorFilePath = file.Path;
             EditorPathText.Text = file.Path;
         }
         catch (Exception ex)
         {
+            _editorFilePath = null;
             EditorPathText.Text = L.GetFormat("ComposePage.ReadFileFailed", ex.Message);
         }
     }
@@ -273,19 +278,16 @@ public sealed partial class ComposePage : Page
     {
         EditorBox.Document.GetText(TextGetOptions.None, out var content);
 
-        var noFilePlaceholder = L.Get("ComposePage.NoFileSelected");
         if (_editingProject is null)
         {
             var mirror = string.IsNullOrWhiteSpace(MirrorBox.Text) ? null : MirrorBox.Text.Trim();
             var projectName = string.IsNullOrWhiteSpace(ProjectNameBox.Text) ? null : ProjectNameBox.Text.Trim();
             var forcePull = ForcePullBox.IsChecked == true;
-            var path = EditorPathText.Text;
-            var hasPath = !string.IsNullOrEmpty(path)
-                && !string.Equals(path, noFilePlaceholder, StringComparison.Ordinal);
+            var path = _editorFilePath;
             HideEditor();
             await ShowProgressAsync(L.Get("ComposePage.DeployProgressTitle"), async progress =>
             {
-                var results = await ViewModel.DeployFromContentAsync(content, hasPath ? path : null, projectName, progress, mirror, forcePull);
+                var results = await ViewModel.DeployFromContentAsync(content, path, projectName, progress, mirror, forcePull);
                 return string.Join(Environment.NewLine,
                     results.Select(r => L.GetFormat(
                         r.Success ? "ComposePage.DeployResultOk" : "ComposePage.DeployResultFail",
@@ -295,11 +297,7 @@ public sealed partial class ComposePage : Page
         else
         {
             var project = _editingProject;
-            var targetPath = string.IsNullOrEmpty(project.FilePath)
-                ? (string.Equals(EditorPathText.Text, noFilePlaceholder, StringComparison.Ordinal)
-                    ? null
-                    : EditorPathText.Text)
-                : project.FilePath;
+            var targetPath = string.IsNullOrEmpty(project.FilePath) ? _editorFilePath : project.FilePath;
             var saved = await ViewModel.SaveProjectFileAsync(targetPath, content);
             HideEditor();
             await ShowInfoAsync(saved ? L.Get("ComposePage.SavedTitle") : L.Get("ComposePage.SaveFailedTitle"),

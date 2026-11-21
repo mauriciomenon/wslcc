@@ -6,6 +6,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:loc="using:WSLCC_App"
     xmlns:vm="using:WSLCC.App.ViewModels"
     mc:Ignorable="d"
     x:DataType="vm:SettingsViewModel">
@@ -27,13 +28,13 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Text="设置"
+                    Text="{loc:Tr Key=Settings.TitleText.Text}"
                     VerticalAlignment="Center" />
                 <Button
                     Grid.Column="1"
                     VerticalAlignment="Center"
                     Command="{x:Bind ViewModel.LoadCommand}"
-                    Content="重新加载" />
+                    Content="{loc:Tr Key=Settings.ReloadButton.Content}" />
             </Grid>
 
             <InfoBar
@@ -41,72 +42,72 @@
                 IsOpen="{x:Bind ViewModel.HasSaveMessage, Mode=OneWay}"
                 Message="{x:Bind ViewModel.SaveMessage, Mode=OneWay}"
                 Severity="Success"
-                Title="提示" />
+                Title="{loc:Tr Key=Settings.SaveInfoBar.Title}" />
             <InfoBar
                 x:Name="ErrorBar"
                 IsClosable="True"
                 IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
                 Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
                 Severity="Error"
-                Title="操作失败" />
+                Title="{loc:Tr Key=Settings.ErrorInfoBar.Title}" />
 
             <controls:SettingsExpander
-                Header="会话配置"
-                Description="写入 wslc 官方 settings.yaml，重启会话后生效"
+                Header="{loc:Tr Key=Settings.SessionSectionTitle.Text}"
+                Description="{loc:Tr Key=Settings.SessionFileHint.Text}"
                 IsExpanded="True">
                 <controls:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE8B7;" />
                 </controls:SettingsExpander.HeaderIcon>
                 <controls:SettingsExpander.Items>
-                    <controls:SettingsCard Header="会话名称" Description="留空使用 wslc 默认会话">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.SessionNameLabel.Text}" Description="{loc:Tr Key=Settings.SessionNameHint}">
                         <TextBox
                             Width="280"
-                            PlaceholderText="如 wslcc-desktop"
+                            PlaceholderText="{loc:Tr Key=Settings.SessionNameBox.PlaceholderText}"
                             Text="{x:Bind ViewModel.SessionName, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="存储路径" Description="会话 VHD 与容器数据的存放位置">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.StoragePathLabel.Text}" Description="{loc:Tr Key=Settings.StoragePathHint}">
                         <TextBox
                             Width="280"
-                            PlaceholderText="如 %LOCALAPPDATA%\WslcData"
+                            PlaceholderText="{loc:Tr Key=Settings.StoragePathBox.PlaceholderText}"
                             Text="{x:Bind ViewModel.StoragePath, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="CPU 配额" Description="留空使用默认（全部核心）">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.CpuCountLabel.Text}" Description="{loc:Tr Key=Settings.CpuHint}">
                         <TextBox
                             Width="280"
-                            PlaceholderText="留空使用默认"
+                            PlaceholderText="{loc:Tr Key=Settings.MemoryMbBox.PlaceholderText}"
                             Text="{x:Bind ViewModel.CpuCount, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="内存配额 (MB)" Description="留空使用默认（物理内存一半）">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.MemoryMbLabel.Text}" Description="{loc:Tr Key=Settings.MemoryHint}">
                         <TextBox
                             Width="280"
-                            PlaceholderText="留空使用默认"
+                            PlaceholderText="{loc:Tr Key=Settings.MemoryMbBox.PlaceholderText}"
                             Text="{x:Bind ViewModel.MemoryMb, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="最大磁盘配额" Description="留空使用默认 1TB">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.MaxStorageSizeLabel.Text}" Description="{loc:Tr Key=Settings.DiskHint}">
                         <TextBox
                             Width="280"
-                            PlaceholderText="如 500GB"
+                            PlaceholderText="{loc:Tr Key=Settings.DiskExample}"
                             Text="{x:Bind ViewModel.MaxStorageSize, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="空闲回收秒数" Description="空闲多久后回收会话 VM，留空使用默认">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.IdleTimeoutLabel.Text}" Description="{loc:Tr Key=Settings.IdleHint}">
                         <TextBox
                             Width="280"
-                            PlaceholderText="如 30"
+                            PlaceholderText="{loc:Tr Key=Settings.IdleExample}"
                             Text="{x:Bind ViewModel.IdleTimeout, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="端口默认绑定地址" Description="container run -p 未指定地址时使用">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.BindingAddressLabel.Text}" Description="{loc:Tr Key=Settings.PortHint}">
                         <TextBox
                             Width="280"
-                            PlaceholderText="如 127.0.0.1"
+                            PlaceholderText="{loc:Tr Key=Settings.BindingAddressBox.PlaceholderText}"
                             Text="{x:Bind ViewModel.BindingAddress, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="宿主回环域名" Description="none 表示禁用">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.HostLoopbackLabel.Text}" Description="{loc:Tr Key=Settings.LoopbackHint}">
                         <TextBox
                             Width="280"
-                            PlaceholderText="如 host.wslc.internal"
+                            PlaceholderText="{loc:Tr Key=Settings.LoopbackExample}"
                             Text="{x:Bind ViewModel.HostLoopback, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="凭据存储方式" Description="镜像仓库登录凭据的存放方式">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.CredentialStoreLabel.Text}" Description="{loc:Tr Key=Settings.CredentialHint}">
                         <ComboBox
                             Width="280"
                             DisplayMemberPath="Label"
@@ -114,86 +115,86 @@
                             SelectedValue="{x:Bind ViewModel.CredentialStore, Mode=TwoWay}"
                             SelectedValuePath="Value" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="保存会话配置" Description="将以上选项写入 wslc settings.yaml">
-                        <Button Command="{x:Bind ViewModel.SaveCommand}" Content="保存配置" />
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.SaveSession}" Description="{loc:Tr Key=Settings.SaveSessionHint}">
+                        <Button Command="{x:Bind ViewModel.SaveCommand}" Content="{loc:Tr Key=Settings.SaveButton.Content}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
 
             <controls:SettingsExpander
-                Header="镜像与编排"
-                Description="镜像加速源与 Compose 目录"
+                Header="{loc:Tr Key=Settings.ImageCompose}"
+                Description="{loc:Tr Key=Settings.ImageComposeHint}"
                 IsExpanded="True">
                 <controls:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE8F4;" />
                 </controls:SettingsExpander.HeaderIcon>
                 <controls:SettingsExpander.Items>
-                    <controls:SettingsCard Header="镜像加速源" Description="拉取镜像时使用的镜像加速地址">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.RegistryMirrorLabel.Text}" Description="{loc:Tr Key=Settings.MirrorHint}">
                         <TextBox
                             Width="280"
-                            PlaceholderText="如 docker.1panel.live"
+                            PlaceholderText="{loc:Tr Key=Settings.RegistryMirrorBox.PlaceholderText}"
                             Text="{x:Bind ViewModel.RegistryMirror, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="Compose 目录" Description="Compose 文件与项目数据的默认存放目录">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.ComposeDirectoryLabel.Text}" Description="{loc:Tr Key=Settings.ComposeDirectoryHint}">
                         <TextBox
                             Width="280"
-                            PlaceholderText="Compose 文件默认工作目录"
+                            PlaceholderText="{loc:Tr Key=Settings.ComposeDirectoryBox.PlaceholderText}"
                             Text="{x:Bind ViewModel.ComposeDirectory, Mode=TwoWay}" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
 
             <controls:SettingsExpander
-                Header="启动与托盘"
-                Description="启动行为与托盘交互"
+                Header="{loc:Tr Key=Settings.StartupTray}"
+                Description="{loc:Tr Key=Settings.StartupTrayHint}"
                 IsExpanded="True">
                 <controls:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE7E8;" />
                 </controls:SettingsExpander.HeaderIcon>
                 <controls:SettingsExpander.Items>
-                    <controls:SettingsCard Header="开机自动启动 WSLCC" Description="随系统启动">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.StartupToggle.Header}" Description="{loc:Tr Key=Settings.StartupToggle.OnContent}">
                         <ToggleSwitch
                             MinWidth="0"
                             OnContent=""
                             OffContent=""
                             IsOn="{x:Bind ViewModel.StartupEnabled, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="启动软件时自动拉起容器" Description="自动启动上次仍在运行的容器">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.StartupContainersToggle.Header}" Description="{loc:Tr Key=Settings.StartupContainersToggle.OnContent}">
                         <ToggleSwitch
                             MinWidth="0"
                             OnContent=""
                             OffContent=""
                             IsOn="{x:Bind ViewModel.StartupContainersEnabled, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="启动时自动检查更新" Description="后台检查 GitHub 发布">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.AutoCheckUpdateToggle.Header}" Description="{loc:Tr Key=Settings.AutoCheckUpdateToggle.OnContent}">
                         <ToggleSwitch
                             MinWidth="0"
                             OnContent=""
                             OffContent=""
                             IsOn="{x:Bind ViewModel.AutoCheckUpdate, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="最小化到托盘时显示通知" Description="最小化时弹托盘气泡提示">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.MinimizeTrayNotifyToggle.Header}" Description="{loc:Tr Key=Settings.MinimizeTrayNotifyToggle.OnContent}">
                         <ToggleSwitch
                             MinWidth="0"
                             OnContent=""
                             OffContent=""
                             IsOn="{x:Bind ViewModel.MinimizeTrayNotify, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="托盘左键打开迷你面板" Description="关闭则左键直接打开主窗口">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.TrayPanel}" Description="{loc:Tr Key=Settings.TrayPanelHint}">
                         <ToggleSwitch
                             MinWidth="0"
                             OnContent=""
                             OffContent=""
                             IsOn="{x:Bind ViewModel.TrayMiniPanel, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="启动时最小化到托盘" Description="启动后直接最小化，仅保留迷你面板">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.StartMinimized}" Description="{loc:Tr Key=Settings.StartMinimizedHint}">
                         <ToggleSwitch
                             MinWidth="0"
                             OnContent=""
                             OffContent=""
                             IsOn="{x:Bind ViewModel.StartMinimized, Mode=TwoWay}" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="关闭行为" Description="点击窗口关闭按钮时的行为">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.CloseBehaviorLabel.Text}" Description="{loc:Tr Key=Settings.CloseHint}">
                         <ComboBox
                             Width="280"
                             DisplayMemberPath="Label"
@@ -205,14 +206,24 @@
             </controls:SettingsExpander>
 
             <controls:SettingsExpander
-                Header="外观"
-                Description="界面背景与主题"
+                Header="{loc:Tr Key=Settings.AppearanceSectionTitle.Text}"
+                Description="{loc:Tr Key=Settings.AppearanceHint}"
                 IsExpanded="True">
                 <controls:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE790;" />
                 </controls:SettingsExpander.HeaderIcon>
                 <controls:SettingsExpander.Items>
-                    <controls:SettingsCard Header="主题色" Description="浅色、深色或跟随系统">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.LanguageLabel.Text}" Description="{loc:Tr Key=Settings.LanguageRestartHint.Text}">
+                        <ComboBox
+                            x:Name="LanguageSelector"
+                            Width="200"
+                            AutomationProperties.Name="{loc:Tr Key=Settings.LanguageLabel.Text}"
+                            DisplayMemberPath="Label"
+                            ItemsSource="{x:Bind ViewModel.LanguageOptions, Mode=OneWay}"
+                            SelectedValue="{x:Bind ViewModel.Language, Mode=TwoWay}"
+                            SelectedValuePath="Value" />
+                    </controls:SettingsCard>
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.ThemeLabel}" Description="{loc:Tr Key=Settings.ThemeHint}">
                         <ComboBox
                             Width="200"
                             DisplayMemberPath="Label"
@@ -220,7 +231,7 @@
                             SelectedValue="{x:Bind ViewModel.Theme, Mode=TwoWay}"
                             SelectedValuePath="Value" />
                     </controls:SettingsCard>
-                    <controls:SettingsCard Header="背景材质" Description="亚克力透出下方窗口；纯色可降低串流/低配环境的渲染开销">
+                    <controls:SettingsCard Header="{loc:Tr Key=Settings.BackdropLabel}" Description="{loc:Tr Key=Settings.BackdropHint}">
                         <ComboBox
                             Width="200"
                             DisplayMemberPath="Label"
@@ -232,15 +243,15 @@
             </controls:SettingsExpander>
 
             <controls:SettingsExpander
-                Header="wslc 管理"
-                Description="检查并升级 WSL 容器组件"
+                Header="{loc:Tr Key=Settings.WslcSectionTitle.Text}"
+                Description="{loc:Tr Key=Settings.WslcManagementHint}"
                 IsExpanded="True">
                 <controls:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE946;" />
                 </controls:SettingsExpander.HeaderIcon>
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
-                        Header="当前 wslc 版本"
+                        Header="{loc:Tr Key=Settings.CurrentVersionLabel.Text}"
                         Description="{x:Bind ViewModel.WslcActionMessage, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal" Spacing="16">
                             <TextBlock VerticalAlignment="Center" Text="{x:Bind ViewModel.WslcCurrentVersion, Mode=OneWay}" />
@@ -248,7 +259,7 @@
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Text="{x:Bind ViewModel.WslcLatestVersion, Mode=OneWay}" />
-                            <Button Command="{x:Bind ViewModel.CheckWslcCommand}" Content="检查更新" />
+                            <Button Command="{x:Bind ViewModel.CheckWslcCommand}" Content="{loc:Tr Key=About.CheckUpdateButton.Content}" />
                             <Button Command="{x:Bind ViewModel.InstallWslcCommand}" Content="{x:Bind ViewModel.WslcActionText, Mode=OneWay}" />
                         </StackPanel>
                     </controls:SettingsCard>
@@ -256,27 +267,27 @@
             </controls:SettingsExpander>
 
             <controls:SettingsExpander
-                Header="本地数据库"
-                Description="审计、拉取历史与容器快照"
+                Header="{loc:Tr Key=Settings.DatabaseSectionTitle.Text}"
+                Description="{loc:Tr Key=Settings.DatabaseHint}"
                 IsExpanded="False">
                 <controls:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE74E;" />
                 </controls:SettingsExpander.HeaderIcon>
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
-                        Header="数据库文件"
+                        Header="{loc:Tr Key=Settings.DatabasePathLabel.Text}"
                         Description="{x:Bind ViewModel.DatabasePath, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal" Spacing="24">
                             <StackPanel Spacing="2">
-                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="审计记录" />
+                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=Settings.AuditCountLabel.Text}" />
                                 <TextBlock Text="{x:Bind ViewModel.AuditCount, Mode=OneWay}" />
                             </StackPanel>
                             <StackPanel Spacing="2">
-                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="拉取历史" />
+                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=Settings.PullCountLabel.Text}" />
                                 <TextBlock Text="{x:Bind ViewModel.PullCount, Mode=OneWay}" />
                             </StackPanel>
                             <StackPanel Spacing="2">
-                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="容器快照" />
+                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=Settings.SnapshotCountLabel.Text}" />
                                 <TextBlock Text="{x:Bind ViewModel.SnapshotCount, Mode=OneWay}" />
                             </StackPanel>
                         </StackPanel>

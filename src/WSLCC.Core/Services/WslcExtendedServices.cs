@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using WSLCC.Core.Cli;
 using WSLCC.Core.Models;
 using YamlDotNet.RepresentationModel;
+using WSLCC_App;
 
 namespace WSLCC.Core.Services;
 
@@ -105,13 +106,13 @@ public sealed class WslcSystemService : IWslcSystemService
     {
         var settings = _settingsFile.Read();
         var cpu = string.IsNullOrEmpty(settings.CpuCount) || settings.CpuCount == WslcSettingsFileService.DefaultSentinel
-            ? "全部核心"
+            ? L.Get("Core.Quota.AllCores")
             : settings.CpuCount;
         var storage = string.IsNullOrEmpty(settings.MaxStorageSize) || settings.MaxStorageSize == WslcSettingsFileService.DefaultSentinel
             ? "1 TB"
             : settings.MaxStorageSize;
         var memory = string.IsNullOrEmpty(settings.MemorySize) || settings.MemorySize == WslcSettingsFileService.DefaultSentinel
-            ? $"物理内存一半（约 {Math.Max(GetTotalPhysicalMemoryGb() / 2, 1)} GB）"
+            ? L.GetFormat("Core.Quota.HalfMemory", Math.Max(GetTotalPhysicalMemoryGb() / 2, 1))
             : settings.MemorySize;
         return new ResourceQuota(cpu, memory, storage);
     }

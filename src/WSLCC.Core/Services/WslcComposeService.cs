@@ -2,6 +2,7 @@ using WSLCC.Core.Cli;
 using WSLCC.Core.Models;
 using WSLCC.Data;
 using YamlDotNet.RepresentationModel;
+using WSLCC_App;
 
 namespace WSLCC.Core.Services;
 
@@ -134,24 +135,24 @@ public sealed class WslcComposeService : IWslcComposeService
         bool forcePull = false, CancellationToken ct = default)
     {
         if (!File.Exists(composeFilePath))
-            throw new FileNotFoundException("Compose 文件不存在。", composeFilePath);
+            throw new FileNotFoundException(L.Get("Core.Compose.FileMissing"), composeFilePath);
 
         var content = await File.ReadAllTextAsync(composeFilePath, ct).ConfigureAwait(false);
         var baseDirectory = Path.GetDirectoryName(Path.GetFullPath(composeFilePath))!;
-        progress?.Report($"解析 compose 文件（{Path.GetFileName(composeFilePath)}）...");
+        progress?.Report(L.GetFormat("Core.Compose.ParseFile", Path.GetFileName(composeFilePath)));
         var services = ParseContent(content, out var projectName, baseDirectory);
         var persistentPath = PersistComposeFile(projectName, content);
 
         var ordered = TopologicalSort(services);
         var results = new List<ComposeDeploymentResult>();
-        progress?.Report($"共 {ordered.Count} 个服务，开始部署...");
+        progress?.Report(L.GetFormat("Core.Compose.DeployServices", ordered.Count));
 
         var index = 0;
         foreach (var service in ordered)
         {
             ct.ThrowIfCancellationRequested();
             index++;
-            progress?.Report($"[{index}/{ordered.Count}] 部署 {service.ContainerName}（{ApplyMirror(service.Image, registryMirror)}）...");
+            progress?.Report(L.GetFormat("Core.Compose.DeployContainer", index, ordered.Count, service.ContainerName, ApplyMirror(service.Image, registryMirror)));
             var started = DateTimeOffset.Now;
             try
             {
@@ -159,19 +160,19 @@ public sealed class WslcComposeService : IWslcComposeService
                 await _containers.RunAsync(options, progress, ct).ConfigureAwait(false);
                 await SafeRecordAsync(() => _deployments.AddAsync(projectName, service.Name, service.ContainerName, persistentPath)).ConfigureAwait(false);
                 await SafeRecordAsync(() => _audit.RecordAsync("compose", "deploy", $"{projectName}/{service.Name}", true, durationMs: ElapsedMs(started))).ConfigureAwait(false);
-                var restartNote = string.IsNullOrEmpty(service.Restart) ? string.Empty : $"（restart 策略 '{service.Restart}' 当前 wslc 不支持，未应用）";
+                var restartNote = string.IsNullOrEmpty(service.Restart) ? string.Empty : L.GetFormat("Core.Compose.UnsupportedRestart", service.Restart);
                 results.Add(new ComposeDeploymentResult(service.Name, service.ContainerName, true, restartNote));
-                progress?.Report($"[{index}/{ordered.Count}] 已部署 {service.ContainerName} {restartNote}".Trim());
+                progress?.Report(L.GetFormat("Core.Compose.Deployed", index, ordered.Count, service.ContainerName, restartNote).Trim());
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 await SafeRecordAsync(() => _audit.RecordAsync("compose", "deploy", $"{projectName}/{service.Name}", false, ex.Message, ElapsedMs(started))).ConfigureAwait(false);
                 results.Add(new ComposeDeploymentResult(service.Name, service.ContainerName, false, ex.Message));
-                progress?.Report($"[{index}/{ordered.Count}] 部署 {service.ContainerName} 失败：{ex.Message}");
+                progress?.Report(L.GetFormat("Core.Compose.DeployFailed", index, ordered.Count, service.ContainerName, ex.Message));
             }
         }
         var ok = results.Count(r => r.Success);
-        progress?.Report($"部署结束：成功 {ok}，失败 {results.Count - ok}，共 {results.Count}。");
+        progress?.Report(L.GetFormat("Core.Compose.DeploySummary", ok, results.Count - ok, results.Count));
         return results;
     }
 
@@ -180,12 +181,12 @@ public sealed class WslcComposeService : IWslcComposeService
         string? registryMirror = null, bool forcePull = false, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(content))
-            throw new InvalidDataException("Compose 内容为空。");
+            throw new InvalidDataException(L.Get("Core.Compose.Empty"));
 
         var originalDirectory = !string.IsNullOrEmpty(composeFilePath) && File.Exists(composeFilePath)
             ? Path.GetDirectoryName(Path.GetFullPath(composeFilePath))!
             : null;
-        progress?.Report("解析 compose 内容...");
+        progress?.Report(L.Get("Core.Compose.ParseContent"));
         var services = ParseContent(content, out var projectName, originalDirectory ?? Path.GetTempPath());
         if (!string.IsNullOrWhiteSpace(overrideProjectName))
             projectName = SanitizeProjectName(overrideProjectName.Trim());
@@ -196,14 +197,14 @@ public sealed class WslcComposeService : IWslcComposeService
 
         var ordered = TopologicalSort(services);
         var results = new List<ComposeDeploymentResult>();
-        progress?.Report($"项目「{projectName}」共 {ordered.Count} 个服务，开始部署...");
+        progress?.Report(L.GetFormat("Core.Compose.DeployProject", projectName, ordered.Count));
 
         var index = 0;
         foreach (var service in ordered)
         {
             ct.ThrowIfCancellationRequested();
             index++;
-            progress?.Report($"[{index}/{ordered.Count}] 部署 {service.ContainerName}（{ApplyMirror(service.Image, registryMirror)}）...");
+            progress?.Report(L.GetFormat("Core.Compose.DeployContainer", index, ordered.Count, service.ContainerName, ApplyMirror(service.Image, registryMirror)));
             var started = DateTimeOffset.Now;
             try
             {
@@ -211,19 +212,19 @@ public sealed class WslcComposeService : IWslcComposeService
                 await _containers.RunAsync(options, progress, ct).ConfigureAwait(false);
                 await SafeRecordAsync(() => _deployments.AddAsync(projectName, service.Name, service.ContainerName, composeFilePath)).ConfigureAwait(false);
                 await SafeRecordAsync(() => _audit.RecordAsync("compose", "deploy", $"{projectName}/{service.Name}", true, durationMs: ElapsedMs(started))).ConfigureAwait(false);
-                var restartNote = string.IsNullOrEmpty(service.Restart) ? string.Empty : $"（restart 策略 '{service.Restart}' 当前 wslc 不支持，未应用）";
+                var restartNote = string.IsNullOrEmpty(service.Restart) ? string.Empty : L.GetFormat("Core.Compose.UnsupportedRestart", service.Restart);
                 results.Add(new ComposeDeploymentResult(service.Name, service.ContainerName, true, restartNote));
-                progress?.Report($"[{index}/{ordered.Count}] 已部署 {service.ContainerName} {restartNote}".Trim());
+                progress?.Report(L.GetFormat("Core.Compose.Deployed", index, ordered.Count, service.ContainerName, restartNote).Trim());
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 await SafeRecordAsync(() => _audit.RecordAsync("compose", "deploy", $"{projectName}/{service.Name}", false, ex.Message, ElapsedMs(started))).ConfigureAwait(false);
                 results.Add(new ComposeDeploymentResult(service.Name, service.ContainerName, false, ex.Message));
-                progress?.Report($"[{index}/{ordered.Count}] 部署 {service.ContainerName} 失败：{ex.Message}");
+                progress?.Report(L.GetFormat("Core.Compose.DeployFailed", index, ordered.Count, service.ContainerName, ex.Message));
             }
         }
         var ok = results.Count(r => r.Success);
-        progress?.Report($"部署结束：成功 {ok}，失败 {results.Count - ok}，共 {results.Count}。");
+        progress?.Report(L.GetFormat("Core.Compose.DeploySummary", ok, results.Count - ok, results.Count));
         return results;
     }
 
@@ -259,7 +260,7 @@ public sealed class WslcComposeService : IWslcComposeService
     {
         var name = (projectName ?? string.Empty).Trim();
         if (name.Length == 0 || name.Any(c => !char.IsLetterOrDigit(c) && c is not '-' and not '_'))
-            throw new InvalidDataException($"项目名「{projectName}」含非法字符，仅允许字母、数字、- 和 _。");
+            throw new InvalidDataException(L.GetFormat("Core.Compose.InvalidProjectName", projectName));
         return name;
     }
 
@@ -269,7 +270,7 @@ public sealed class WslcComposeService : IWslcComposeService
     {
         var entries = await ProjectEntriesAsync(projectName).ConfigureAwait(false);
         var results = new List<ComposeDeploymentResult>();
-        progress?.Report($"共 {entries.Count} 个服务，开始重建...");
+        progress?.Report(L.GetFormat("Core.Compose.RebuildServices", entries.Count));
 
         var index = 0;
         foreach (var entry in entries)
@@ -278,12 +279,12 @@ public sealed class WslcComposeService : IWslcComposeService
             index++;
             if (string.IsNullOrEmpty(entry.ComposeFilePath) || !File.Exists(entry.ComposeFilePath))
             {
-                results.Add(new ComposeDeploymentResult(entry.ServiceName, entry.ContainerName, false, "compose 文件缺失，无法重建"));
-                progress?.Report($"[{index}/{entries.Count}] 跳过 {entry.ContainerName}：compose 文件缺失");
+                results.Add(new ComposeDeploymentResult(entry.ServiceName, entry.ContainerName, false, L.Get("Core.Compose.CannotRebuildMissingFile")));
+                progress?.Report(L.GetFormat("Core.Compose.SkipMissingFile", index, entries.Count, entry.ContainerName));
                 continue;
             }
 
-            progress?.Report($"[{index}/{entries.Count}] 强制重建 {entry.ContainerName} ...");
+            progress?.Report(L.GetFormat("Core.Compose.Rebuild", index, entries.Count, entry.ContainerName));
             try
             {
                 await _containers.StopAsync(entry.ContainerName, ct).ConfigureAwait(false);
@@ -305,8 +306,8 @@ public sealed class WslcComposeService : IWslcComposeService
                 ?? services.FirstOrDefault(s => s.ContainerName == entry.ContainerName);
             if (service is null)
             {
-                results.Add(new ComposeDeploymentResult(entry.ServiceName, entry.ContainerName, false, "compose 文件中找不到该服务"));
-                progress?.Report($"[{index}/{entries.Count}] 重建 {entry.ContainerName} 失败：compose 文件中找不到该服务");
+                results.Add(new ComposeDeploymentResult(entry.ServiceName, entry.ContainerName, false, L.Get("Core.Compose.ServiceMissing")));
+                progress?.Report(L.GetFormat("Core.Compose.RebuildMissingService", index, entries.Count, entry.ContainerName));
                 continue;
             }
 
@@ -318,13 +319,13 @@ public sealed class WslcComposeService : IWslcComposeService
                 await _containers.RunAsync(options, progress, ct).ConfigureAwait(false);
                 await SafeRecordAsync(() => _audit.RecordAsync("compose", "rebuild", $"{projectName}/{service.Name}", true, durationMs: ElapsedMs(started))).ConfigureAwait(false);
                 results.Add(new ComposeDeploymentResult(service.Name, service.ContainerName, true, null));
-                progress?.Report($"[{index}/{entries.Count}] 已重建 {entry.ContainerName}");
+                progress?.Report(L.GetFormat("Core.Compose.Rebuilt", index, entries.Count, entry.ContainerName));
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 await SafeRecordAsync(() => _audit.RecordAsync("compose", "rebuild", $"{projectName}/{service.Name}", false, ex.Message, ElapsedMs(started))).ConfigureAwait(false);
                 results.Add(new ComposeDeploymentResult(service.Name, entry.ContainerName, false, ex.Message));
-                progress?.Report($"[{index}/{entries.Count}] 重建 {entry.ContainerName} 失败：{ex.Message}");
+                progress?.Report(L.GetFormat("Core.Compose.RebuildFailed", index, entries.Count, entry.ContainerName, ex.Message));
             }
         }
         return results;
@@ -342,7 +343,7 @@ public sealed class WslcComposeService : IWslcComposeService
         foreach (var name in targets)
         {
             ct.ThrowIfCancellationRequested();
-            progress?.Report($"下线 {name} ...");
+            progress?.Report(L.GetFormat("Core.Compose.TakeDown", name));
             stopped.AddRange(await StopContainerAsync(name, progress, ct).ConfigureAwait(false));
         }
         await _deployments.ClearProjectAsync(projectName).ConfigureAwait(false);
@@ -370,7 +371,7 @@ public sealed class WslcComposeService : IWslcComposeService
                     e.ContainerName,
                     container?.Image ?? "-",
                     container?.State ?? "missing",
-                    container?.Status ?? "容器不存在（已被手动删除）",
+                    container?.Status ?? L.Get("Core.Compose.ContainerMissing"),
                     container?.State.Equals("running", StringComparison.OrdinalIgnoreCase) == true);
             }).ToList();
             var filePath = entries.Select(e => e.ComposeFilePath).FirstOrDefault(f => !string.IsNullOrEmpty(f));
@@ -384,29 +385,29 @@ public sealed class WslcComposeService : IWslcComposeService
     {
         var entries = await ProjectEntriesAsync(projectName).ConfigureAwait(false);
         var stopped = new List<string>();
-        progress?.Report($"共 {entries.Count} 个服务，开始停止...");
+        progress?.Report(L.GetFormat("Core.Compose.StopServices", entries.Count));
         var index = 0;
         foreach (var entry in entries)
         {
             ct.ThrowIfCancellationRequested();
             index++;
-            progress?.Report($"[{index}/{entries.Count}] 停止 {entry.ContainerName} ...");
+            progress?.Report(L.GetFormat("Core.Compose.Stop", index, entries.Count, entry.ContainerName));
             try
             {
                 await _containers.StopAsync(entry.ContainerName, ct).ConfigureAwait(false);
                 stopped.Add(entry.ContainerName);
-                progress?.Report($"[{index}/{entries.Count}] 已停止 {entry.ContainerName}");
+                progress?.Report(L.GetFormat("Core.Compose.Stopped", index, entries.Count, entry.ContainerName));
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 if (IsContainerMissing(ex))
                 {
                     stopped.Add(entry.ContainerName);
-                    progress?.Report($"[{index}/{entries.Count}] 已停止 {entry.ContainerName}（容器不存在/未运行）");
+                    progress?.Report(L.GetFormat("Core.Compose.AlreadyStopped", index, entries.Count, entry.ContainerName));
                 }
                 else
                 {
-                    progress?.Report($"[{index}/{entries.Count}] 停止 {entry.ContainerName} 失败：{ex.Message}");
+                    progress?.Report(L.GetFormat("Core.Compose.StopFailed", index, entries.Count, entry.ContainerName, ex.Message));
                 }
             }
         }
@@ -418,13 +419,13 @@ public sealed class WslcComposeService : IWslcComposeService
     {
         var entries = await ProjectEntriesAsync(projectName).ConfigureAwait(false);
         var deleted = new List<string>();
-        progress?.Report($"共 {entries.Count} 个服务，开始删除...");
+        progress?.Report(L.GetFormat("Core.Compose.DeleteServices", entries.Count));
         var index = 0;
         foreach (var entry in entries)
         {
             ct.ThrowIfCancellationRequested();
             index++;
-            progress?.Report($"[{index}/{entries.Count}] 删除 {entry.ContainerName} ...");
+            progress?.Report(L.GetFormat("Core.Compose.Delete", index, entries.Count, entry.ContainerName));
             try
             {
                 await _containers.StopAsync(entry.ContainerName, ct).ConfigureAwait(false);
@@ -436,18 +437,18 @@ public sealed class WslcComposeService : IWslcComposeService
             {
                 await _containers.RemoveAsync(entry.ContainerName, force: true, ct).ConfigureAwait(false);
                 deleted.Add(entry.ContainerName);
-                progress?.Report($"[{index}/{entries.Count}] 已删除 {entry.ContainerName}");
+                progress?.Report(L.GetFormat("Core.Compose.Deleted", index, entries.Count, entry.ContainerName));
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 if (IsContainerMissing(ex))
                 {
                     deleted.Add(entry.ContainerName);
-                    progress?.Report($"[{index}/{entries.Count}] 已删除 {entry.ContainerName}（容器不存在）");
+                    progress?.Report(L.GetFormat("Core.Compose.AlreadyDeleted", index, entries.Count, entry.ContainerName));
                 }
                 else
                 {
-                    progress?.Report($"[{index}/{entries.Count}] 删除 {entry.ContainerName} 失败：{ex.Message}");
+                    progress?.Report(L.GetFormat("Core.Compose.DeleteFailed", index, entries.Count, entry.ContainerName, ex.Message));
                 }
             }
         }
@@ -460,28 +461,28 @@ public sealed class WslcComposeService : IWslcComposeService
     {
         var entries = await ProjectEntriesAsync(projectName).ConfigureAwait(false);
         var started = new List<string>();
-        progress?.Report($"共 {entries.Count} 个服务，开始启动...");
+        progress?.Report(L.GetFormat("Core.Compose.StartServices", entries.Count));
         var index = 0;
         foreach (var entry in entries)
         {
             ct.ThrowIfCancellationRequested();
             index++;
-            progress?.Report($"[{index}/{entries.Count}] 启动 {entry.ContainerName} ...");
+            progress?.Report(L.GetFormat("Core.Compose.Start", index, entries.Count, entry.ContainerName));
             try
             {
                 await _containers.StartAsync(entry.ContainerName, ct).ConfigureAwait(false);
                 started.Add(entry.ContainerName);
-                progress?.Report($"[{index}/{entries.Count}] 已启动 {entry.ContainerName}");
+                progress?.Report(L.GetFormat("Core.Compose.Started", index, entries.Count, entry.ContainerName));
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 if (IsContainerMissing(ex))
                 {
-                    progress?.Report($"[{index}/{entries.Count}] 跳过 {entry.ContainerName}（容器不存在）");
+                    progress?.Report(L.GetFormat("Core.Compose.SkipMissing", index, entries.Count, entry.ContainerName));
                 }
                 else
                 {
-                    progress?.Report($"[{index}/{entries.Count}] 启动 {entry.ContainerName} 失败：{ex.Message}");
+                    progress?.Report(L.GetFormat("Core.Compose.StartFailed", index, entries.Count, entry.ContainerName, ex.Message));
                 }
             }
         }
@@ -493,43 +494,43 @@ public sealed class WslcComposeService : IWslcComposeService
     {
         var entries = await ProjectEntriesAsync(projectName).ConfigureAwait(false);
         var restarted = new List<string>();
-        progress?.Report($"共 {entries.Count} 个服务，开始重启...");
+        progress?.Report(L.GetFormat("Core.Compose.RestartServices", entries.Count));
         var index = 0;
         foreach (var entry in entries)
         {
             ct.ThrowIfCancellationRequested();
             index++;
-            progress?.Report($"[{index}/{entries.Count}] 重启 {entry.ContainerName} ...");
+            progress?.Report(L.GetFormat("Core.Compose.Restart", index, entries.Count, entry.ContainerName));
             try
             {
                 await _containers.RestartAsync(entry.ContainerName, ct).ConfigureAwait(false);
                 restarted.Add(entry.ContainerName);
-                progress?.Report($"[{index}/{entries.Count}] 已重启 {entry.ContainerName}");
+                progress?.Report(L.GetFormat("Core.Compose.Restarted", index, entries.Count, entry.ContainerName));
             }
             catch (Exception ex) when (ex is not OperationCanceledException && IsContainerMissing(ex))
             {
-                progress?.Report($"[{index}/{entries.Count}] {entry.ContainerName} 未运行，改为启动 ...");
+                progress?.Report(L.GetFormat("Core.Compose.StartInstead", index, entries.Count, entry.ContainerName));
                 try
                 {
                     await _containers.StartAsync(entry.ContainerName, ct).ConfigureAwait(false);
                     restarted.Add(entry.ContainerName);
-                    progress?.Report($"[{index}/{entries.Count}] 已启动 {entry.ContainerName}");
+                    progress?.Report(L.GetFormat("Core.Compose.Started", index, entries.Count, entry.ContainerName));
                 }
                 catch (Exception ex2) when (ex2 is not OperationCanceledException)
                 {
                     if (IsContainerMissing(ex2))
                     {
-                        progress?.Report($"[{index}/{entries.Count}] 跳过 {entry.ContainerName}（容器不存在）");
+                        progress?.Report(L.GetFormat("Core.Compose.SkipMissing", index, entries.Count, entry.ContainerName));
                     }
                     else
                     {
-                        progress?.Report($"[{index}/{entries.Count}] 启动 {entry.ContainerName} 失败：{ex2.Message}");
+                        progress?.Report(L.GetFormat("Core.Compose.StartFailed", index, entries.Count, entry.ContainerName, ex2.Message));
                     }
                 }
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
-                progress?.Report($"[{index}/{entries.Count}] 重启 {entry.ContainerName} 失败：{ex.Message}");
+                progress?.Report(L.GetFormat("Core.Compose.RestartFailed", index, entries.Count, entry.ContainerName, ex.Message));
             }
         }
         return restarted;
@@ -561,13 +562,13 @@ public sealed class WslcComposeService : IWslcComposeService
         try
         {
             await _containers.RemoveAsync(name, force: true, ct).ConfigureAwait(false);
-            progress?.Report($"已删除 {name}");
+            progress?.Report(L.GetFormat("ComposePage.DeletedItem", name));
             await SafeRecordAsync(() => _audit.RecordAsync("compose", "down", name, true)).ConfigureAwait(false);
             return new[] { name };
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            progress?.Report($"删除 {name} 失败：{ex.Message}");
+            progress?.Report(L.GetFormat("Core.Compose.RemoveFailed", name, ex.Message));
             await SafeRecordAsync(() => _audit.RecordAsync("compose", "down", name, false, ex.Message)).ConfigureAwait(false);
             return Array.Empty<string>();
         }
@@ -580,7 +581,7 @@ public sealed class WslcComposeService : IWslcComposeService
         yaml.Load(reader);
 
         if (yaml.Documents.Count == 0 || yaml.Documents[0].RootNode is not YamlMappingNode root)
-            throw new InvalidDataException("Compose 内容格式无效。");
+            throw new InvalidDataException(L.Get("Core.Compose.InvalidContent"));
 
         var services = ParseServices(root);
         var directoryName = Path.GetFileName(baseDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
@@ -596,14 +597,14 @@ public sealed class WslcComposeService : IWslcComposeService
     private IReadOnlyList<ComposeServiceDefinition> ParseFile(string composeFilePath, out string projectName)
     {
         if (!File.Exists(composeFilePath))
-            throw new FileNotFoundException("Compose 文件不存在。", composeFilePath);
+            throw new FileNotFoundException(L.Get("Core.Compose.FileMissing"), composeFilePath);
 
         var yaml = new YamlStream();
         using var reader = new StreamReader(composeFilePath);
         yaml.Load(reader);
 
         if (yaml.Documents.Count == 0 || yaml.Documents[0].RootNode is not YamlMappingNode root)
-            throw new InvalidDataException("Compose 文件格式无效。");
+            throw new InvalidDataException(L.Get("Core.Compose.InvalidFile"));
 
         projectName = GetScalar(root, "name")
             ?? Path.GetFileName(Path.GetDirectoryName(Path.GetFullPath(composeFilePath))!)
@@ -616,7 +617,7 @@ public sealed class WslcComposeService : IWslcComposeService
     {
         if (!root.Children.TryGetValue(new YamlScalarNode("services"), out var servicesNode)
             || servicesNode is not YamlMappingNode services)
-            throw new InvalidDataException("Compose 缺少 services 定义。");
+            throw new InvalidDataException(L.Get("Core.Compose.MissingServices"));
 
         var result = new List<ComposeServiceDefinition>();
         foreach (var entry in services.Children)
@@ -625,7 +626,7 @@ public sealed class WslcComposeService : IWslcComposeService
                 continue;
             var name = nameNode.Value!;
             var image = GetScalar(svc, "image")
-                ?? throw new InvalidDataException($"服务 {name} 缺少 image 定义。");
+                ?? throw new InvalidDataException(L.GetFormat("Core.Compose.MissingImage", name));
             var containerName = GetScalar(svc, "container_name") ?? name;
             var ports = GetStringList(svc, "ports");
             var environment = GetEnvironment(svc);
@@ -656,7 +657,7 @@ public sealed class WslcComposeService : IWslcComposeService
         {
             if (visited.Contains(service.ContainerName)) return;
             if (!visiting.Add(service.ContainerName))
-                throw new InvalidDataException($"服务依赖存在循环：{service.ContainerName}。");
+                throw new InvalidDataException(L.GetFormat("Core.Compose.DependencyCycle", service.ContainerName));
             foreach (var dep in service.DependsOn)
             {
                 if (byName.TryGetValue(dep, out var depService))

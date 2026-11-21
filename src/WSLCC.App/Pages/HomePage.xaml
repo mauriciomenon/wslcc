@@ -3,6 +3,7 @@
     x:Class="WSLCC.App.Pages.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:loc="using:WSLCC_App"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:WSLCC.Core.Models"
@@ -26,7 +27,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Spacing="2">
-                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="WSLC 仪表盘" />
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{loc:Tr Key=HomePage.DashboardTitle.Text}" />
                     <TextBlock
                         Style="{StaticResource CaptionTextBlockStyle}"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -39,7 +40,7 @@
                     VerticalAlignment="Center">
                     <Button
                         Command="{x:Bind ViewModel.RefreshCommand}"
-                        Content="刷新" />
+                        Content="{loc:Tr Key=HomePage.RefreshButton.Content}" />
                 </StackPanel>
             </Grid>
 
@@ -50,21 +51,21 @@
                     IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
                     Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
                     Severity="Error"
-                    Title="操作失败" />
+                    Title="{loc:Tr Key=HomePage.ErrorInfoBar.Title}" />
 
                 <InfoBar
                     IsClosable="True"
                     IsOpen="{x:Bind ViewModel.HasStatus, Mode=OneWay}"
                     Message="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
                     Severity="Success"
-                    Title="完成" />
+                    Title="{loc:Tr Key=HomePage.StatusInfoBar.Title}" />
 
                 <InfoBar
                     IsClosable="True"
                     IsOpen="{x:Bind ViewModel.HasNetworkWarning, Mode=OneWay}"
                     Message="{x:Bind ViewModel.NetworkWarningText, Mode=OneWay}"
                     Severity="Warning"
-                    Title="网络环境警告" />
+                    Title="{loc:Tr Key=HomePage.NetworkWarningInfoBar.Title}" />
             </StackPanel>
 
             <Border
@@ -81,7 +82,7 @@
                             FontSize="13"
                             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                             Glyph="&#xE946;" />
-                        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="排查指导" />
+                        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{loc:Tr Key=HomePage.GuidanceTitle.Text}" />
                     </StackPanel>
                     <ItemsControl ItemsSource="{x:Bind ViewModel.GuidanceSteps, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>
@@ -124,7 +125,7 @@
                             <TextBlock
                                 Style="{StaticResource CaptionTextBlockStyle}"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Text="活动会话" />
+                                Text="{loc:Tr Key=HomePage.ActiveSessionsCaption.Text}" />
                         </StackPanel>
                         <TextBlock
                             FontSize="30"
@@ -149,7 +150,7 @@ Glyph="&#xEB9F;" />
                             <TextBlock
                                 Style="{StaticResource CaptionTextBlockStyle}"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Text="本地镜像" />
+                                Text="{loc:Tr Key=HomePage.ImagesCaption.Text}" />
                         </StackPanel>
                         <TextBlock
                             FontSize="30"
@@ -174,7 +175,7 @@ Glyph="&#xEB9F;" />
                             <TextBlock
                                 Style="{StaticResource CaptionTextBlockStyle}"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Text="容器数量" />
+                                Text="{loc:Tr Key=HomePage.ContainersCaption.Text}" />
                             <TextBlock
                                 VerticalAlignment="Center"
                                 Style="{StaticResource CaptionTextBlockStyle}"
@@ -204,7 +205,7 @@ Glyph="&#xEB9F;" />
                             <TextBlock
                                 Style="{StaticResource CaptionTextBlockStyle}"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Text="审计记录" />
+                                Text="{loc:Tr Key=HomePage.AuditCaption.Text}" />
                         </StackPanel>
                         <TextBlock
                             FontSize="30"
@@ -233,7 +234,7 @@ Glyph="&#xEB9F;" />
                                 FontSize="13"
                                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                 Glyph="&#xE930;" />
-                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="环境与运行状态" />
+                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{loc:Tr Key=HomePage.EnvironmentTitle.Text}" />
                         </StackPanel>
                         <Grid ColumnSpacing="10" RowSpacing="8">
                             <Grid.ColumnDefinitions>
@@ -251,28 +252,28 @@ Glyph="&#xEB9F;" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="wslc 版本" />
+                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.WslcVersionCaption.Text}" />
                             <TextBlock Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.WslcVersion, Mode=OneWay}" />
 
-                            <TextBlock Grid.Row="1" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Linux 内核" />
+                            <TextBlock Grid.Row="1" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.KernelVersionCaption.Text}" />
                             <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.KernelVersion, Mode=OneWay}" />
 
-                            <TextBlock Grid.Row="2" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Windows" />
+                            <TextBlock Grid.Row="2" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.WindowsVersionCaption.Text}" />
                             <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.WindowsVersion, Mode=OneWay}" />
 
-                            <TextBlock Grid.Row="3" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="会话管理器" />
+                            <TextBlock Grid.Row="3" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.SessionManagerCaption.Text}" />
                             <TextBlock Grid.Row="3" Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.SessionManagerVersion, Mode=OneWay}" />
 
-                            <TextBlock Grid.Row="4" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="缺失组件" />
+                            <TextBlock Grid.Row="4" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.MissingComponentsCaption.Text}" />
                             <TextBlock Grid.Row="4" Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.MissingComponents, Mode=OneWay}" />
 
-                            <TextBlock Grid.Row="5" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="原生 API" />
+                            <TextBlock Grid.Row="5" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.ApiStatusCaption.Text}" />
                             <TextBlock Grid.Row="5" Grid.Column="1" Style="{StaticResource BodyTextBlockStyle}" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.ApiStatus, Mode=OneWay}" />
 
-                            <TextBlock Grid.Row="6" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="数据库" />
+                            <TextBlock Grid.Row="6" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.DatabaseCaption.Text}" />
                             <TextBlock Grid.Row="6" Grid.Column="1" Style="{StaticResource CaptionTextBlockStyle}" IsTextSelectionEnabled="True" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.DatabasePath, Mode=OneWay}" />
 
-                            <TextBlock Grid.Row="7" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="配置" />
+                            <TextBlock Grid.Row="7" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.SettingsFileCaption.Text}" />
                             <TextBlock Grid.Row="7" Grid.Column="1" Style="{StaticResource CaptionTextBlockStyle}" IsTextSelectionEnabled="True" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.SettingsFile, Mode=OneWay}" />
                         </Grid>
                     </StackPanel>
@@ -291,7 +292,7 @@ Glyph="&#xEB9F;" />
                                 FontSize="13"
                                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                 Glyph="&#xE7F3;" />
-                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="资源配额" />
+                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{loc:Tr Key=HomePage.QuotaTitle.Text}" />
                         </StackPanel>
                         <Grid ColumnSpacing="10" RowSpacing="8">
                             <Grid.ColumnDefinitions>
@@ -304,13 +305,13 @@ Glyph="&#xEB9F;" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="CPU" />
+                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.QuotaCpuCaption.Text}" />
                             <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="{x:Bind ViewModel.QuotaCpu, Mode=OneWay}" />
 
-                            <TextBlock Grid.Row="1" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="内存" />
+                            <TextBlock Grid.Row="1" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.QuotaMemoryCaption.Text}" />
                             <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Text="{x:Bind ViewModel.QuotaMemory, Mode=OneWay}" />
 
-                            <TextBlock Grid.Row="2" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="存储上限" />
+                            <TextBlock Grid.Row="2" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{loc:Tr Key=HomePage.QuotaStorageCaption.Text}" />
                             <TextBlock Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" Text="{x:Bind ViewModel.QuotaStorage, Mode=OneWay}" />
                         </Grid>
                     </StackPanel>
@@ -334,7 +335,7 @@ Glyph="&#xEB9F;" />
                                     FontSize="13"
                                     Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                     Glyph="&#xE7F4;" />
-                                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="活动会话" />
+                                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{loc:Tr Key=HomePage.SessionListTitle.Text}" />
                             </StackPanel>
                             <StackPanel
                                 Grid.Column="1"
@@ -343,15 +344,15 @@ Glyph="&#xEB9F;" />
                                 <Button
                                     Padding="8,3"
                                     Click="StartSessions_Click"
-                                    Content="启动" />
+                                    Content="{loc:Tr Key=ContainersPage.StartButton.Content}" />
                                 <Button
                                     Padding="8,3"
                                     Click="TerminateSessions_Click"
-                                    Content="终止" />
+                                    Content="{loc:Tr Key=HomePage.TerminateButton.Content}" />
                                 <Button
                                     Padding="8,3"
                                     Click="RestartSessions_Click"
-                                    Content="重启" />
+                                    Content="{loc:Tr Key=HomePage.RestartButton.Content}" />
                             </StackPanel>
                         </Grid>
                         <ListView
@@ -385,7 +386,7 @@ Glyph="&#xEB9F;" />
                                             MinHeight="0"
                                             Padding="8,3"
                                             Click="OpenSessionTerminal_Click"
-                                            Content="终端"
+                                            Content="{loc:Tr Key=ContainersPage.TerminalButton.Content}"
                                             Tag="{x:Bind Name}" />
                                     </Grid>
                                 </DataTemplate>

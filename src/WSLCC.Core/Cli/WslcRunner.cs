@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using WSLCC_App;
 
 namespace WSLCC.Core.Cli;
 
@@ -120,14 +121,12 @@ public sealed partial class WslcRunner
         try
         {
             return Process.Start(psi)
-                ?? throw new WslcCliException("无法启动 wslc.exe。");
+                ?? throw new WslcCliException(L.Get("Core.Cli.LaunchFailed"));
         }
         catch (Win32Exception ex) when (ex.NativeErrorCode == 2)
         {
             throw new WslcCliException(
-                "未找到 wslc.exe。请先安装 WSL 容器 CLI 并确保其位于 PATH 中，"
-                + "或在管理员终端执行 wsl --update 后重启应用。"
-                + $"（搜索路径：{psi.FileName}）");
+                L.GetFormat("Core.Cli.NotFound", psi.FileName));
         }
     }
 
@@ -208,7 +207,7 @@ public sealed partial class WslcRunner
         }
         if (results.Count == 0 && failed > 0)
             throw new WslcCliException(
-                $"wslc 输出无法解析为 JSON（{failed} 行非 JSON）：{Truncate(output)}");
+                L.GetFormat("Core.Cli.InvalidJson", failed, Truncate(output)));
         return results;
     }
 

@@ -2,6 +2,7 @@
 <Page
     x:Class="WSLCC.App.Pages.ComposePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:loc="using:WSLCC_App"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -23,11 +24,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Spacing="2">
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Compose 部署" />
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{loc:Tr Key=ComposePage.Title.Text}" />
                 <TextBlock
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="管理通过 docker-compose.yml 部署的项目" />
+                    Text="{loc:Tr Key=ComposePage.Subtitle.Text}" />
             </StackPanel>
 <StackPanel
                 Grid.Column="1"
@@ -36,16 +37,16 @@
                 VerticalAlignment="Center">
                 <Button
                     Click="OpenComposeDir_Click"
-                    Content="打开目录" />
+                    Content="{loc:Tr Key=ComposePage.OpenDirButton.Content}" />
                 <Button
                     Click="ChangeComposeDir_Click"
-                    Content="更改目录" />
+                    Content="{loc:Tr Key=ComposePage.ChangeDirButton.Content}" />
                 <Button
                     Command="{x:Bind ViewModel.RefreshCommand}"
-                    Content="刷新" />
+                    Content="{loc:Tr Key=ComposePage.RefreshButton.Content}" />
                 <Button
                     Click="Deploy_Click"
-                    Content="新建 / 部署 Compose" />
+                    Content="{loc:Tr Key=ComposePage.DeployButton.Content}" />
             </StackPanel>
         </Grid>
 
@@ -56,7 +57,7 @@
             IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
             Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
             Severity="Error"
-            Title="操作失败" />
+            Title="{loc:Tr Key=ComposePage.ErrorInfoBar.Title}" />
 
         <Grid Grid.Row="2">
             <Grid x:Name="ListPanel">
@@ -68,7 +69,7 @@
                     Style="{StaticResource BodyTextBlockStyle}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     IsHitTestVisible="False"
-                    Text="暂无 Compose 项目，点击右上角新建 / 部署 Compose 开始"
+                    Text="{loc:Tr Key=ComposePage.EmptyText.Text}"
                     Visibility="{x:Bind ViewModel.HasProjects, Converter={StaticResource InverseBoolToVis}, Mode=OneWay}" />
                 <ListView
                     ItemsSource="{x:Bind ViewModel.Projects, Mode=OneWay}"
@@ -125,12 +126,12 @@
                                         Spacing="6">
                                         <Button
                                             Click="OpenFolder_Click"
-                                            Content="打开目录"
+                                            Content="{loc:Tr Key=ComposePage.OpenFolderButton.Content}"
                                             Tag="{x:Bind}"
                                             Visibility="{x:Bind HasFilePath, Converter={StaticResource BoolToVis}, Mode=OneWay}" />
                                         <Button
                                             Click="EditProject_Click"
-                                            Content="编辑"
+                                            Content="{loc:Tr Key=ComposePage.EditButton.Content}"
                                             Tag="{x:Bind}" />
 <Button
                                             Click="PrimaryAction_Click"
@@ -138,16 +139,16 @@
                                             Tag="{x:Bind}" />
                                         <Button
                                             Click="RestartProject_Click"
-                                            Content="重启"
+                                            Content="{loc:Tr Key=ComposePage.RestartButton.Content}"
                                             Tag="{x:Bind}" />
                                         <Button
                                             Click="RebuildProject_Click"
-                                            Content="重建"
+                                            Content="{loc:Tr Key=ComposePage.RebuildButton.Content}"
                                             Tag="{x:Bind}" />
                                         <Button
                                             Foreground="{ThemeResource SystemFillColorCriticalBrush}"
                                             Click="DeleteProject_Click"
-                                            Content="删除项目"
+                                            Content="{loc:Tr Key=ComposePage.DeleteProjectButton.Content}"
                                             Tag="{x:Bind}" />
                                     </StackPanel>
                                 </Grid>
@@ -185,7 +186,7 @@
                         Grid.Column="1"
                         VerticalAlignment="Center"
                         Click="EditorCancel_Click"
-                        Content="返回列表" />
+                        Content="{loc:Tr Key=ComposePage.BackButton.Content}" />
                 </Grid>
 
                 <StackPanel
@@ -196,24 +197,24 @@
                     <TextBox
                         x:Name="ProjectNameBox"
                         Width="220"
-                        PlaceholderText="留空自动生成"
-                        Header="项目名称（目录）"
+                        PlaceholderText="{loc:Tr Key=ComposePage.ProjectNameBox.PlaceholderText}"
+                        Header="{loc:Tr Key=ComposePage.ProjectNameBox.Header}"
                         Visibility="Collapsed" />
                     <TextBox
                         x:Name="MirrorBox"
                         Width="320"
-                        Header="镜像加速源"
-                        PlaceholderText="如 docker.1panel.live"
+                        Header="{loc:Tr Key=ComposePage.MirrorBox.Header}"
+                        PlaceholderText="{loc:Tr Key=ComposePage.MirrorBox.PlaceholderText}"
                         Visibility="Collapsed" />
                     <CheckBox
                         x:Name="ForcePullBox"
-                        Content="强制拉取最新镜像"
+                        Content="{loc:Tr Key=ContainersPage.ForcePull}"
                         VerticalAlignment="Bottom"
                         Visibility="Collapsed" />
                     <Button
                         Click="EditorLoad_Click"
                         VerticalAlignment="Bottom"
-                        Content="从文件加载" />
+                        Content="{loc:Tr Key=ComposePage.LoadFromFileButton.Content}" />
                 </StackPanel>
 
                 <RichEditBox
@@ -233,7 +234,7 @@
                     <Button
                         Click="EditorPrimary_Click"
                         x:Name="EditorPrimaryBtn"
-                        Content="保存" />
+                        Content="{loc:Tr Key=ComposePage.EditorPrimaryBtn.Content}" />
                 </StackPanel>
             </Grid>
         </Grid>

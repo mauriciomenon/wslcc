@@ -3,6 +3,7 @@
     x:Class="WSLCC.App.Pages.ActivityPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:loc="using:WSLCC_App"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:WSLCC.Data"
@@ -27,7 +28,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock
                 Style="{StaticResource TitleTextBlockStyle}"
-                Text="活动"
+                Text="{loc:Tr Key=Activity.TitleText.Text}"
                 VerticalAlignment="Center" />
             <StackPanel
                 Grid.Column="1"
@@ -36,10 +37,10 @@
                 VerticalAlignment="Center">
                 <Button
                     Command="{x:Bind ViewModel.RefreshCommand}"
-                    Content="刷新" />
+                    Content="{loc:Tr Key=Activity.RefreshButton.Content}" />
                 <Button
                     Command="{x:Bind ViewModel.ClearAuditCommand}"
-                    Content="清空审计日志" />
+                    Content="{loc:Tr Key=Activity.ClearAuditButton.Content}" />
             </StackPanel>
         </Grid>
 
@@ -50,12 +51,12 @@
             IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
             Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
             Severity="Error"
-            Title="操作失败" />
+            Title="{loc:Tr Key=Activity.ErrorBar.Title}" />
 
         <TextBlock
             Grid.Row="2"
             Style="{StaticResource SubtitleTextBlockStyle}"
-            Text="操作审计" />
+            Text="{loc:Tr Key=Activity.AuditSectionTitle.Text}" />
 
         <ListView
             Grid.Row="3"
@@ -89,7 +90,7 @@
         <TextBlock
             Grid.Row="4"
             Style="{StaticResource SubtitleTextBlockStyle}"
-            Text="镜像拉取历史" />
+            Text="{loc:Tr Key=Activity.PullSectionTitle.Text}" />
 
         <ListView
             Grid.Row="5"

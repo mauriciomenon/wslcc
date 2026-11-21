@@ -2,6 +2,7 @@
 <Page
     x:Class="WSLCC.App.Pages.ContainersPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:loc="using:WSLCC_App"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -24,7 +25,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock
                 Style="{StaticResource TitleTextBlockStyle}"
-                Text="容器"
+                Text="{loc:Tr Key=ContainersPage.Title.Text}"
                 VerticalAlignment="Center" />
             <StackPanel
                 Grid.Column="1"
@@ -33,16 +34,16 @@
                 VerticalAlignment="Center">
                 <Button
                     Command="{x:Bind ViewModel.RefreshCommand}"
-                    Content="刷新" />
+                    Content="{loc:Tr Key=ContainersPage.RefreshButton.Content}" />
                 <Button
                     Click="PruneStopped_Click"
-                    Content="清理已停止" />
+                    Content="{loc:Tr Key=Prune.ContainersButton.Content}" />
                 <Button
                     Click="CopyFiles_Click"
-                    Content="复制文件" />
+                    Content="{loc:Tr Key=ContainersPage.CopyButton.Content}" />
                 <Button
                     Click="NewContainer_Click"
-                    Content="新建" />
+                    Content="{loc:Tr Key=ContainersPage.NewButton.Content}" />
             </StackPanel>
         </Grid>
 
@@ -53,21 +54,21 @@
                 IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
                 Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
                 Severity="Error"
-                Title="操作失败" />
+                Title="{loc:Tr Key=ContainersPage.ErrorInfoBar.Title}" />
 
             <InfoBar
                 IsClosable="True"
                 IsOpen="{x:Bind ViewModel.HasNetworkWarning, Mode=OneWay}"
                 Message="{x:Bind ViewModel.NetworkWarningText, Mode=OneWay}"
                 Severity="Warning"
-                Title="网络环境警告" />
+                Title="{loc:Tr Key=ContainersPage.NetworkWarningInfoBar.Title}" />
 
             <InfoBar
                 IsClosable="True"
                 IsOpen="{x:Bind ViewModel.HasReparseWarning, Mode=OneWay}"
                 Message="{x:Bind ViewModel.ReparseWarningText, Mode=OneWay}"
                 Severity="Warning"
-                Title="路径策略警告" />
+                Title="{loc:Tr Key=ContainersPage.ReparseWarningInfoBar.Title}" />
         </StackPanel>
 
 <Grid Grid.Row="2">
@@ -80,7 +81,7 @@
                 Style="{StaticResource BodyTextBlockStyle}"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 IsHitTestVisible="False"
-                Text="暂无容器，点击新建或使用 Compose 部署"
+                Text="{loc:Tr Key=ContainersPage.EmptyText.Text}"
                 Visibility="{x:Bind ViewModel.HasContainers, Converter={StaticResource InverseBoolToVis}, Mode=OneWay}" />
 
             <GridView
@@ -158,7 +159,7 @@
                                             MinWidth="0" MinHeight="0"
                                             Padding="8,3"
                                             Click="ContainerAction_Click"
-                                            Content="打开"
+                                            Content="{loc:Tr Key=ContainersPage.OpenWebButton.Content}"
                                             Tag="web"
                                             Visibility="{x:Bind HasWebUrl, Converter={StaticResource BoolToVis}, Mode=OneWay}" />
                                     </StackPanel>
@@ -202,41 +203,41 @@
 <Button
                                         MinWidth="0" MinHeight="0" Padding="6,3"
                                         Click="ContainerAction_Click"
-                                        Content="启动"
+                                        Content="{loc:Tr Key=ContainersPage.StartButton.Content}"
                                         Tag="start"
                                         Visibility="{x:Bind IsRunning, Converter={StaticResource InverseBoolToVis}, Mode=OneWay}" />
                                     <Button
                                         MinWidth="0" MinHeight="0" Padding="6,3"
                                         Click="ContainerAction_Click"
-                                        Content="停止"
+                                        Content="{loc:Tr Key=ContainersPage.StopButton.Content}"
                                         Tag="stop"
                                         Visibility="{x:Bind IsRunning, Converter={StaticResource BoolToVis}, Mode=OneWay}" />
                                     <Button
                                         MinWidth="0" MinHeight="0" Padding="6,3"
                                         Click="ContainerAction_Click"
-                                        Content="重启"
+                                        Content="{loc:Tr Key=ContainersPage.RestartButton.Content}"
                                         Tag="restart"
                                         Visibility="{x:Bind IsRunning, Converter={StaticResource BoolToVis}, Mode=OneWay}" />
                                     <Button
                                         MinWidth="0" MinHeight="0" Padding="6,3"
                                         Click="ContainerAction_Click"
-                                        Content="日志"
+                                        Content="{loc:Tr Key=ContainersPage.LogsButton.Content}"
                                         Tag="logs" />
                                     <Button
                                         MinWidth="0" MinHeight="0" Padding="6,3"
                                         Click="ContainerAction_Click"
-                                        Content="详情"
+                                        Content="{loc:Tr Key=ContainersPage.InspectButton.Content}"
                                         Tag="inspect" />
                                     <Button
                                         MinWidth="0" MinHeight="0" Padding="6,3"
                                         Click="ContainerAction_Click"
-                                        Content="终端"
+                                        Content="{loc:Tr Key=ContainersPage.TerminalButton.Content}"
                                         Tag="terminal" />
                                     <Button
                                         MinWidth="0" MinHeight="0" Padding="6,3"
                                         Foreground="{ThemeResource SystemFillColorCriticalBrush}"
                                         Click="ContainerAction_Click"
-                                        Content="删除"
+                                        Content="{loc:Tr Key=ContainersPage.DeleteButton.Content}"
                                         Tag="delete" />
                                 </StackPanel>
                             </Grid>
