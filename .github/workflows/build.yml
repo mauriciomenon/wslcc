@@ -46,11 +46,9 @@ jobs:
       - name: Trim language resources
         shell: powershell
         run: |
-          $keep = @("en-us", "en-US", "en-GB", "zh-CN", "zh-Hans", "zh-Hant", "zh-TW")
+          . ./scripts/build-common.ps1
           foreach ($publish in @("artifacts/publish", "artifacts/publish-framework")) {
-            Get-ChildItem "$publish" -Directory | Where-Object {
-                $_.Name -match "^[a-z]{2,3}(-[A-Za-z]{2,8}){0,2}$" -and $_.Name -notin $keep
-            } | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-UnusedLanguageResource -OutputDirectory $publish
           }
 
       - name: Package zips
