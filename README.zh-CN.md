@@ -7,6 +7,24 @@
 
 [Portugues (Brasil)](README.md) | [English](README.en.md) | [简体中文](README.zh-CN.md)
 
+## 本分支为何在发布时重新编译三个 SQLite DLL
+
+WSLCC 使用 `Microsoft.Data.Sqlite` 10.0.11 保存界面语言等本地数据。该软件包通过 SQLitePCLRaw 2.1.12 调用 SQLite。检查 NuGet 软件包时，我们在下列三个 DLL 中发现了维护者的构建目录路径。[SQLitePCLRaw 2.1.12 源代码](https://github.com/ericsink/SQLitePCL.raw/tree/v2.1.12)
+
+| 文件 | 用途 |
+| --- | --- |
+| `SQLitePCLRaw.core.dll` | 提供调用 SQLite 的 .NET 接口。 |
+| `SQLitePCLRaw.provider.e_sqlite3.dll` | 将这些调用转发给原生库 `e_sqlite3.dll`。 |
+| `SQLitePCLRaw.batteries_v2.dll` | 在应用使用 SQLite 时选择并初始化该提供程序。 |
+
+每个 DLL 的 **CodeView** 调试记录都保存了编译时生成的 `.pdb` 符号文件路径，供调试器查找符号。WSLCC 下载依赖项之前，这些路径就已写入 DLL。用户的数据库和设置与这些构建元数据分开存储。
+
+为避免在发行包中公开个人构建路径，本分支在制作 Windows x64 发行包时，从相同版本的源代码重新编译上述三个 DLL。原生 SQLite 引擎 `e_sqlite3.dll` 仍取自原软件包。发行说明列出了所用源代码和可用于校验下载文件的 SHA-256 哈希值。[本分支的发行版](https://github.com/mauriciomenon/wslcc/releases)
+
+**来源与验证。** 我们使用 SQLitePCLRaw 的 `v2.1.12` 标签，将编译路径映射为中性的 `/_/` 前缀。我们核对了各程序集的名称、程序集版本 `2.1.12.3116`、公钥标识以及公开和受保护 API 的签名。在解压后的 ZIP 中运行 WSLCC，程序打开临时数据库，保存语言设置 `pt-BR`，重启后以葡萄牙语显示。SQLite 对该数据库的完整性检查返回 `ok`。直接从本仓库按常规方式构建时，仍会使用 NuGet 提供的 DLL。[本次构建的源代码提交](https://github.com/ericsink/SQLitePCL.raw/commit/ca835d21508bff43121c65081035840ac5006c4c)
+
+原版 WSLCC 使用 MIT 许可证，版权所有者为 DSUK（2026 年）。重新编译的三个 DLL 使用 SQLitePCLRaw 的 Apache 2.0 许可证。两种许可证均位于发行包的 `licenses` 目录。[WSLCC 许可证](LICENSE) | [SQLitePCLRaw 许可证](https://github.com/ericsink/SQLitePCL.raw/blob/v2.1.12/LICENSE.TXT)
+
 ## 界面语言
 
 在本分支中，打开 **设置 > 外观 > 语言**，可选择跟随系统、英语、巴西葡萄牙语或简体中文。完全退出 WSLCC（包括托盘图标）后重新打开即可生效。

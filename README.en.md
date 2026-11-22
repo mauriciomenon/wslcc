@@ -7,6 +7,24 @@
 
 [Portugues (Brasil)](README.md) | [English](README.en.md) | [简体中文](README.zh-CN.md)
 
+## Why the fork rebuilds three SQLite DLLs for its release
+
+WSLCC uses `Microsoft.Data.Sqlite` 10.0.11 to store local data, including the selected interface language. That package uses SQLitePCLRaw 2.1.12 to call SQLite. While inspecting the NuGet files, we found the maintainer's build directory in three DLLs. [SQLitePCLRaw 2.1.12 source](https://github.com/ericsink/SQLitePCL.raw/tree/v2.1.12)
+
+| File | Role in the application |
+| --- | --- |
+| `SQLitePCLRaw.core.dll` | Provides the .NET interface for calling SQLite. |
+| `SQLitePCLRaw.provider.e_sqlite3.dll` | Forwards those calls to the native `e_sqlite3.dll` library. |
+| `SQLitePCLRaw.batteries_v2.dll` | Selects and initializes that provider when the application uses SQLite. |
+
+Each DLL had a **CodeView** debug record containing the path to the `.pdb` symbol file produced during compilation. A debugger uses this path to find the symbols. The path was already present when WSLCC downloaded the dependency. The user's database and settings are stored separately from this build metadata.
+
+This fork avoids distributing personal build paths. For the Windows x64 release, we rebuilt these three DLLs from the source for the same version. The native SQLite engine, `e_sqlite3.dll`, still comes from the original package. The release notes identify the source and provide SHA-256 hashes for checking the downloads. [Fork releases](https://github.com/mauriciomenon/wslcc/releases)
+
+**Source and verification.** We used SQLitePCLRaw tag `v2.1.12` and mapped build paths to the neutral prefix `/_/`. We checked each assembly's name, assembly version `2.1.12.3116`, public key identity, and public and protected API signatures. Running from the extracted ZIP, WSLCC opened a temporary database, saved `pt-BR` when the language changed, and reopened in Portuguese. SQLite's integrity check on that database returned `ok`. A standard build from this repository still uses the NuGet DLLs. [Exact source commit](https://github.com/ericsink/SQLitePCL.raw/commit/ca835d21508bff43121c65081035840ac5006c4c)
+
+The original WSLCC is MIT-licensed, copyright DSUK (2026). The three rebuilt DLLs are distributed under SQLitePCLRaw's Apache 2.0 license. Both licenses ship in the `licenses` directory. [WSLCC license](LICENSE) | [SQLitePCLRaw license](https://github.com/ericsink/SQLitePCL.raw/blob/v2.1.12/LICENSE.TXT)
+
 ## Interface language
 
 In this fork, open **Settings > Appearance > Language** to follow the system language or choose English, Portuguese (Brazil) or Simplified Chinese. Quit WSLCC completely, including the tray icon, then reopen it to apply the change.

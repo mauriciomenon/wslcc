@@ -7,6 +7,24 @@
 
 [Portugues (Brasil)](README.md) | [English](README.en.md) | [简体中文](README.zh-CN.md)
 
+## Por que a release do fork recompila tres DLLs do SQLite
+
+O WSLCC usa o pacote `Microsoft.Data.Sqlite` 10.0.11 para gravar dados locais, como a preferencia de idioma. Esse pacote usa o SQLitePCLRaw 2.1.12 para chamar o SQLite. Ao inspecionar os arquivos distribuidos pelo NuGet, encontramos o caminho da pasta de compilacao do mantenedor em tres DLLs. [Codigo do SQLitePCLRaw 2.1.12](https://github.com/ericsink/SQLitePCL.raw/tree/v2.1.12)
+
+| Arquivo | Funcao no aplicativo |
+| --- | --- |
+| `SQLitePCLRaw.core.dll` | Fornece a interface .NET usada para chamar o SQLite. |
+| `SQLitePCLRaw.provider.e_sqlite3.dll` | Encaminha essas chamadas para a biblioteca nativa `e_sqlite3.dll`. |
+| `SQLitePCLRaw.batteries_v2.dll` | Seleciona e inicializa esse provedor quando o aplicativo usa o SQLite. |
+
+O caminho estava no registro de depuracao **CodeView** de cada DLL. Ele indica ao depurador onde procurar o arquivo de simbolos `.pdb` usado na compilacao. Esse registro foi gravado antes de o WSLCC baixar a dependencia. O arquivo de banco e os dados de quem usa o aplicativo ficam separados desses metadados.
+
+A distribuicao deste fork evita publicar caminhos pessoais de compilacao. Para a release Windows x64, recompilamos essas tres DLLs a partir do codigo da mesma versao. A biblioteca nativa `e_sqlite3.dll` continua sendo a do pacote original. As notas da release identificam o codigo usado e incluem os hashes SHA-256 para conferir os arquivos baixados. [Releases deste fork](https://github.com/mauriciomenon/wslcc/releases)
+
+**Origem e verificacao.** Usamos a tag `v2.1.12` do SQLitePCLRaw e mapeamos os caminhos da compilacao para o prefixo neutro `/_/`. Conferimos o nome, a versao de assembly `2.1.12.3116`, a chave publica usada para identificar cada assembly e as assinaturas da API publica e protegida. No teste do ZIP, o WSLCC abriu um banco temporario, salvou `pt-BR` ao trocar o idioma e reabriu em portugues. O SQLite retornou `ok` na verificacao de integridade desse banco. Uma compilacao comum a partir do repositorio continua usando as DLLs do NuGet. [Commit usado na recompilacao](https://github.com/ericsink/SQLitePCL.raw/commit/ca835d21508bff43121c65081035840ac5006c4c)
+
+O WSLCC original usa a licenca MIT, com copyright de DSUK (2026). As tres DLLs recompiladas usam a licenca Apache 2.0 do SQLitePCLRaw. As licencas acompanham o pacote na pasta `licenses`. [Licenca do WSLCC](LICENSE) | [Licenca do SQLitePCLRaw](https://github.com/ericsink/SQLitePCL.raw/blob/v2.1.12/LICENSE.TXT)
+
 ## Idioma da interface
 
 Neste fork, abra **Configuracoes > Aparencia > Idioma** para seguir o idioma do sistema ou escolher ingles, portugues do Brasil ou chines simplificado. Encerre o WSLCC pelo icone da bandeja e abra o aplicativo novamente para aplicar a mudanca.
